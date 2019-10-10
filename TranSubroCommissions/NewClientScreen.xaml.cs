@@ -12,15 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SourceChord.FluentWPF;
+
 namespace TranSubroCommissions
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NewClientScreen.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class NewClientScreen : UserControl
     {
-        public MainWindow() 
+        public NewClientScreen()
         {
             InitializeComponent();
         }
