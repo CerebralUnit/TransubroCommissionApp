@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,17 +13,29 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SourceChord.FluentWPF;
+using Transubro.CMS.API;
+using Transubro.CMS.Model;
+
 namespace TranSubroCommissions
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ClientList.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SalespersonList : InjectableUserControl
     {
-        public MainWindow( ) 
-        {
+        [Inject]
+        public ISalespersonService sales { private get; set; }
+
+
+        public SalespersonList( )
+        { 
             InitializeComponent();
+            this.Loaded += delegate
+            {
+                SalespersonsList.ItemsSource = sales.GetAllSalesPersons(); 
+            };
         }
+
+        
     }
 }

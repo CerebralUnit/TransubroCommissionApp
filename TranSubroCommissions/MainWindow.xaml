@@ -6,17 +6,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TranSubroCommissions" 
         mc:Ignorable="d"
-        
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         Title="MainWindow" Height="720" Width="1200">
-    <Grid  Background="#01FFFFFF" Margin="3">
-        <Border Padding="15">
-            <StackPanel>
-
-                <local:NewClientScreen></local:NewClientScreen>
-
-
-                <local:ClientList></local:ClientList>
-            </StackPanel>
+    <Window.Resources>
+       
+    </Window.Resources>
+    <Grid Background="#01FFFFFF" Margin="0"> 
+        <Border Padding="0">
+            
+                <dragablz:TabablzControl Background="#ffffff"   BorderThickness="0" > 
+                    <TabItem Header="New Client" > 
+                        <Border Padding="15">
+                            <local:NewClientScreen></local:NewClientScreen>
+                        </Border>
+                    </TabItem>
+                    <TabItem Header="Current Clients">
+                        <Border Padding="0">
+                            <local:ClientList></local:ClientList>
+                        </Border>
+                    </TabItem>
+                    <TabItem Header="New Claims">
+                        <Border Padding="15">
+                            <local:AddClaims></local:AddClaims>
+                        </Border>
+                    </TabItem>
+                    <TabItem Header="Sales Persons">
+                        <Border Padding="15">
+                            <local:SalespersonList></local:SalespersonList>
+                        </Border>
+                    </TabItem>
+                </dragablz:TabablzControl>  
         </Border>
     </Grid>
 </Window>
