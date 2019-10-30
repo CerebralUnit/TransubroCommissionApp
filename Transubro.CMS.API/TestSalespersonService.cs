@@ -46,6 +46,16 @@ namespace Transubro.CMS.API
             {
                 Id = "TS-7",
                 Name = "Zack"
+            },
+            new SalesPerson()
+            {
+                Id = "TS-8",
+                Name = "CDS"
+            },
+            new SalesPerson()
+            {
+                Id = "TS-9",
+                Name = "TAG"
             }
         };
 
@@ -55,3 +65,4 @@ namespace Transubro.CMS.API
         }
     }
 }
+ 

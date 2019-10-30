@@ -1,0 +1,4 @@
+﻿<CustomerQueryRq> 
+  <ActiveStatus >ActiveOnly</ActiveStatus> 
+  <OwnerID >0</OwnerID> 
+</CustomerQueryRq>

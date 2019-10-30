@@ -1,0 +1,8 @@
+﻿<PurchaseOrderAddRq>
+  <PurchaseOrderAdd>
+    <VendorRef>
+      <FullName>{{VendorName}}</FullName>
+    </VendorRef> 
+    {{LineItems}}
+  </PurchaseOrderAdd>
+</PurchaseOrderAddRq>

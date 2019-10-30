@@ -1,0 +1,8 @@
+﻿<ItemServiceQueryRq> 
+    <FromModifiedDate>{{StartDate}}</FromModifiedDate>
+    <ToModifiedDate>{{EndDate}}</ToModifiedDate>
+  <NameFilter> 
+    <MatchCriterion>StartsWith</MatchCriterion> 
+    <Name>{{Prefix}}</Name> 
+  </NameFilter>
+</ItemServiceQueryRq>

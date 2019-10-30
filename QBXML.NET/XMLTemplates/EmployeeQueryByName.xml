@@ -1,0 +1,7 @@
+﻿<EmployeeQueryRq>
+  <NameFilter> 
+    <MatchCriterion >Contains</MatchCriterion> 
+    <Name>{{Name}}</Name> 
+  </NameFilter> 
+  <OwnerID >0</OwnerID>
+</EmployeeQueryRq>

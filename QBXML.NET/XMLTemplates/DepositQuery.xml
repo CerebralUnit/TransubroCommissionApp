@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?qbxml version="13.0"?>
+<QBXML>
+  <QBXMLMsgsRq onError="stopOnError">
+    <DepositQueryRq>
+      <TxnDateRangeFilter>
+        <FromTxnDate >{{StartDate}}</FromTxnDate>
+        <ToTxnDate >{{EndDate}}</ToTxnDate>
+      </TxnDateRangeFilter>
+      <IncludeLineItems >true</IncludeLineItems>
+    </DepositQueryRq>
+  </QBXMLMsgsRq>
+</QBXML>

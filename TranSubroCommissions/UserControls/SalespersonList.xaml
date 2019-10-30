@@ -11,7 +11,7 @@
         <StackPanel>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" Name="SalespersonsList"  CanUserAddRows="False" Background="#FFF">
                 <DataGrid.Columns> 
-                    <DataGridTextColumn Header="Id"  Binding="{Binding Path=Id}" Width="211" />
+                    <DataGridTextColumn Header="Id"  Binding="{Binding Path=Id}" Width="60" />
                     <DataGridTextColumn Header="Salesperson"  Binding="{Binding  Path=Name }" Width="*" /> 
                 </DataGrid.Columns>
             </DataGrid> 

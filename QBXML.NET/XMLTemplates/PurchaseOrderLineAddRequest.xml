@@ -1,0 +1,6 @@
+﻿<PurchaseOrderLineAdd>
+  <ItemRef>
+    <FullName>{{ItemName}}</FullName>
+  </ItemRef>
+  <Quantity>{{Quantity}}</Quantity> 
+</PurchaseOrderLineAdd>

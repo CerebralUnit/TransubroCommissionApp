@@ -25,7 +25,7 @@ namespace TranSubroCommissions
     public partial class ClientList : InjectableUserControl, INotifyPropertyChanged
     {
         private ICollectionView _dataGridCollection;
-        private string _filterString = "test";
+        private string _filterString = "";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

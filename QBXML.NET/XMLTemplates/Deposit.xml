@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?qbxml version="13.0"?>
+<QBXML>
+  <QBXMLMsgsRq onError="stopOnError">
+    <DepositAddRq>
+      <DepositAdd>
+        <!-- required -->
+        <TxnDate >{{Date}}</TxnDate>
+        <!-- optional -->
+        <DepositToAccountRef>
+          <!-- required -->
+          <FullName >{{DepositToAccount}}</FullName>
+          <!-- optional -->
+        </DepositToAccountRef>
+        <Memo>{{Memo}}</Memo>
+        <!-- optional -->
+        <DepositLineAdd>
+          <EntityRef> 
+            <FullName >{{DepositLineEntityFullName}}</FullName> 
+          </EntityRef>
+          <AccountRef>
+            <FullName>Subrogation Client</FullName>
+            <!-- optional -->
+          </AccountRef>
+          <Memo>{{DepositLineMemo}}</Memo>
+          <!-- optional -->
+          <CheckNumber >{{CheckNumber}}</CheckNumber>
+          <!-- optional -->
+          <PaymentMethodRef>
+            <FullName >Check</FullName>
+            <!-- optional -->
+          </PaymentMethodRef>
+          <Amount >{{Amount}}</Amount>
+        </DepositLineAdd>
+      </DepositAdd>
+    </DepositAddRq>
+  </QBXMLMsgsRq>
+</QBXML>

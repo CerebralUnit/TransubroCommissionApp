@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?qbxml version="13.0"?>
+<QBXML>
+  <QBXMLMsgsRq onError="continueOnError">
+    <PurchaseOrderAddRq>
+      <PurchaseOrderAdd>
+        <VendorRef>
+          <FullName>ACE</FullName>
+        </VendorRef>
+        <PurchaseOrderLineAdd>
+          <ItemRef>
+            <FullName>ACE-115522-1234</FullName>
+          </ItemRef>
+          <Quantity>0.5</Quantity>
+        </PurchaseOrderLineAdd>
+        <PurchaseOrderLineAdd>
+          <ItemRef>
+            <FullName>PT-042219</FullName>
+          </ItemRef>
+          <Quantity>0.5</Quantity>
+        </PurchaseOrderLineAdd>
+        <PurchaseOrderLineAdd>
+          <ItemRef>
+            <FullName>MXT-12354-3333</FullName>
+          </ItemRef>
+          <Quantity>0.5</Quantity>
+        </PurchaseOrderLineAdd>
+      </PurchaseOrderAdd>
+    </PurchaseOrderAddRq>
+  </QBXMLMsgsRq>
+</QBXML>

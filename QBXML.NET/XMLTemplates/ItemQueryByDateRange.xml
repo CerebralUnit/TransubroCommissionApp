@@ -1,0 +1,4 @@
+﻿<ItemServiceQueryRq> 
+    <FromModifiedDate>{{StartDate}}</FromModifiedDate>
+    <ToModifiedDate>{{EndDate}}</ToModifiedDate>
+</ItemServiceQueryRq>

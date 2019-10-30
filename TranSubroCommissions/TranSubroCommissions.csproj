@@ -14,6 +14,21 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +48,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>tsc.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dragablz, Version=0.0.3.203, Culture=neutral, processorArchitecture=MSIL">
@@ -140,14 +158,55 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QBXML.NET\QBXML.NET.csproj">
+      <Project>{5f1061cb-d146-4d43-8907-6e0b333b20a7}</Project>
+      <Name>QBXML.NET</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Transubro.CMS.API\Transubro.CMS.API.csproj">
       <Project>{e1a95476-bb78-42d5-975d-b451ee789eba}</Project>
       <Name>Transubro.CMS.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Transubro.CMS.Integrations\Transubro.CMS.Integrations.csproj">
+      <Project>{1bd96d06-da49-44e6-a280-e4891b794a7a}</Project>
+      <Name>Transubro.CMS.Integrations</Name>
     </ProjectReference>
     <ProjectReference Include="..\Transubro.CMS.Model\Transubro.CMS.Model.csproj">
       <Project>{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}</Project>
       <Name>Transubro.CMS.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="calc-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="transcalc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="calc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commision-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tc-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tsc.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

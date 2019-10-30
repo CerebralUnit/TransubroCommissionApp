@@ -30,7 +30,12 @@ namespace Transubro.CMS.API
                 Name = "ACE",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 4, 15)
+                ThresholdDate = new DateTime(2018, 4, 15),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -44,21 +49,37 @@ namespace Transubro.CMS.API
                 Name = "AMB",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 8, 28)
+                ThresholdDate = new DateTime(2018, 8, 28),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-4", 0.15m },
+                }
             },
             new Client()
             {
                 Name = "BT",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2019, 3, 1)
+                ThresholdDate = new DateTime(2019, 3, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
                 Name = "CBT",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 5, 15)
+                ThresholdDate = new DateTime(2018, 5, 15),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.12m },
+                    { "TS-3", 0.05m },
+                }
             },
             new Client()
             {
@@ -72,14 +93,22 @@ namespace Transubro.CMS.API
                 Name = "CIC",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 2, 1)
+                ThresholdDate = new DateTime(2018, 2, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.25m } 
+                }
             },
             new Client()
             {
                 Name = "DC",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 10, 8)
+                ThresholdDate = new DateTime(2018, 10, 8),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m } 
+                }
             },
             new Client()
             {
@@ -128,21 +157,34 @@ namespace Transubro.CMS.API
                 Name = "GMC",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2019, 4, 12)
+                ThresholdDate = new DateTime(2019, 4, 12),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-2", 0.15m } 
+                }
             },
             new Client()
             {
                 Name = "GVC",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 12, 1)
+                ThresholdDate = new DateTime(2018, 12, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-8", 0.15m } 
+                }
             },
             new Client()
             {
                 Name = "HRI",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 9, 1)
+                ThresholdDate = new DateTime(2018, 9, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -170,7 +212,12 @@ namespace Transubro.CMS.API
                 Name = "JSB",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 4, 26)
+                ThresholdDate = new DateTime(2018, 4, 26),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -184,19 +231,29 @@ namespace Transubro.CMS.API
                 Name = "JTS",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2019, 7, 15)
+                ThresholdDate = new DateTime(2019, 7, 15),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
                 Name = "KBL",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2019, 2, 2)
+                ThresholdDate = new DateTime(2019, 2, 2),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.125m },
+                    { "TS-1", 0.125m },
+                }
             },
             new Client()
             {
                 Name = "KCT",
-                 TransubroPercentageOld = 0.666666m,
+                TransubroPercentageOld = 0.666666m,
                 TransubroPercentageNew = 0.666666m,
                 ThresholdDate = null
             },
@@ -205,7 +262,12 @@ namespace Transubro.CMS.API
                 Name = "KLS",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 3, 27)
+                ThresholdDate = new DateTime(2018, 3, 27),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -226,56 +288,83 @@ namespace Transubro.CMS.API
                 Name = "LMI",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 1, 25)
+                ThresholdDate = new DateTime(2018, 1, 25),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.25m } 
+                }
             },
             new Client()
             {
                 Name = "MLS",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2017, 9, 27)
+                ThresholdDate = new DateTime(2017, 9, 27),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
                 Name = "MPC",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 10, 1)
+                ThresholdDate = new DateTime(2018, 10, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-8", 0.15m } 
+                }
             },
             new Client()
             {
                 Name = "MTW",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 10, 21)
+                ThresholdDate = new DateTime(2018, 10, 21),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.25m } 
+                }
             },
             new Client()
             {
                 Name = "MV",
-                    TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageOld = 0.666666m,
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
                 Name = "NC",
-                    TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageOld = 0.666666m,
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
                 Name = "NEX",
                 TransubroPercentageOld = 0.6m,
                 TransubroPercentageNew = 0.7m,
-                ThresholdDate = new DateTime(2018, 11, 20)
+                ThresholdDate = new DateTime(2018, 11, 20),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.2m },
+                    { "TS-9", 0.05m },
+                }
             },
             new Client()
             {
                 Name = "P",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 5, 22)
+                ThresholdDate = new DateTime(2018, 5, 22),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -289,7 +378,12 @@ namespace Transubro.CMS.API
                 Name = "PRH",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 7, 9)
+                ThresholdDate = new DateTime(2018, 7, 9),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -366,7 +460,12 @@ namespace Transubro.CMS.API
                 Name = "SWF",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2019, 3, 1)
+                ThresholdDate = new DateTime(2019, 3, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -378,9 +477,9 @@ namespace Transubro.CMS.API
             new Client()
             {
                 Name = "TH",
-                    TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageOld = 0.666666m,
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
@@ -401,7 +500,12 @@ namespace Transubro.CMS.API
                 Name = "TSE",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 9, 1)
+                ThresholdDate = new DateTime(2018, 9, 1),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             },
             new Client()
             {
@@ -415,28 +519,32 @@ namespace Transubro.CMS.API
                 Name = "TW",
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2017, 3, 30)
+                ThresholdDate = new DateTime(2017, 3, 30),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-6", 0.2m } 
+                }
             },
             new Client()
             {
                 Name = "VB",
                 TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
                 Name = "VCRD",
-                    TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageOld = 0.666666m,
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
                 Name = "VPL",
-                    TransubroPercentageOld = 0.666666m,
-                        TransubroPercentageNew = 0.666666m,
-                        ThresholdDate = null
+                TransubroPercentageOld = 0.666666m,
+                TransubroPercentageNew = 0.666666m,
+                ThresholdDate = null
             },
             new Client()
             {
@@ -458,7 +566,12 @@ namespace Transubro.CMS.API
 
                 TransubroPercentageOld = 0.5m,
                 TransubroPercentageNew = 0.666666m,
-                ThresholdDate = new DateTime(2018, 6, 4)
+                ThresholdDate = new DateTime(2018, 6, 4),
+                SalespersonSplits = new Dictionary<string, decimal>()
+                {
+                    { "TS-5", 0.1m },
+                    { "TS-1", 0.15m },
+                }
             }
 
         };

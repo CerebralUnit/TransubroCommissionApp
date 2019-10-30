@@ -1,0 +1,40 @@
+﻿<ItemServiceQueryRq metaData="ENUMTYPE" iterator="ENUMTYPE" iteratorID="UUIDTYPE">
+  <!-- BEGIN OR -->
+    <ListID>IDTYPE</ListID> <!-- optional, may repeat -->
+    <!-- OR -->
+    <FullName>STRTYPE</FullName> <!-- optional, may repeat -->
+    <!-- OR -->
+    <MaxReturned>INTTYPE</MaxReturned> <!-- optional -->
+  
+    <ActiveStatus>ENUMTYPE</ActiveStatus> <!-- optional --> <!-- ActiveStatus may have one of the following values: ActiveOnly [DEFAULT], InactiveOnly, All -->
+    <FromModifiedDate>DATETIMETYPE</FromModifiedDate> <!-- optional -->
+    <ToModifiedDate>DATETIMETYPE</ToModifiedDate> <!-- optional -->
+    <!-- BEGIN OR -->
+      <NameFilter> <!-- optional -->
+        <!-- MatchCriterion may have one of the following values: StartsWith, Contains, EndsWith -->
+        <MatchCriterion>ENUMTYPE</MatchCriterion>
+        <!-- required -->
+        <Name>STRTYPE</Name>
+        <!-- required -->
+      </NameFilter>
+      <!-- OR -->
+      <NameRangeFilter> <!-- optional -->
+        <FromName>STRTYPE</FromName> <!-- optional -->
+        <ToName>STRTYPE</ToName> <!-- optional -->
+      </NameRangeFilter>
+    <!-- END OR -->
+    <ClassFilter> <!-- optional -->
+      <!-- BEGIN OR -->
+        <ListID>IDTYPE</ListID> <!-- optional, may repeat -->
+        <!-- OR -->
+        <FullName>STRTYPE</FullName> <!-- optional, may repeat -->
+        <!-- OR -->
+        <ListIDWithChildren>IDTYPE</ListIDWithChildren> <!-- optional -->
+        <!-- OR -->
+        <FullNameWithChildren>STRTYPE</FullNameWithChildren> <!-- optional -->
+      <!-- END OR -->
+    </ClassFilter>
+  <!-- END OR -->
+  <IncludeRetElement>STRTYPE</IncludeRetElement> <!-- optional, may repeat -->
+  <OwnerID>GUIDTYPE</OwnerID> <!-- optional, may repeat -->
+</ItemServiceQueryRq>

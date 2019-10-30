@@ -4,59 +4,174 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TranSubroCommissions"
-                              xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" 
-
+            xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"  
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        
         <Grid.Resources>
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
                 <Setter Property="MinWidth" Value="100" />
                 <Setter Property="Margin" Value="0 0 15 0" /> 
             </Style>
+            <Style x:Key="BorderCard" TargetType="{x:Type Border}"> 
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect ShadowDepth="1" BlurRadius="5" Color="#11000000" Opacity="0.4"/>
+                    </Setter.Value>
+
+                </Setter>
+            </Style>
         </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="250" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+        <Button Grid.Row="0"   Grid.Column="0" m:ButtonAssist.CornerRadius="40" Background="Transparent" Foreground="#000" m:ShadowAssist.ShadowDepth="Depth0" BorderThickness="0"  Height="40" Padding="0" Panel.ZIndex="5" Margin="0 0 30 -50" HorizontalAlignment="Right" Name="AddCheckButton" Click="AddCheckButton_Click">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <m:PackIcon  Height="20"  Width="20" Kind="Plus"></m:PackIcon>
+                    <TextBlock Margin="5 0 0 0" Text="Add Claim" />
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <ScrollViewer Background="#f2f2f2" VerticalAlignment="Stretch" Padding="0"  Grid.Row="1" BorderBrush="Transparent"  BorderThickness="0"  Grid.Column="0" >
+           
             
-            <Button m:ButtonAssist.CornerRadius="40" Background="Transparent" Foreground="#000" m:ShadowAssist.ShadowDepth="Depth0" BorderThickness="0" Width="40" Height="40" Padding="0" Panel.ZIndex="5" Margin="0 0 0 -45" HorizontalAlignment="Right" Name="AddCheckButton" Click="AddCheckButton_Click">
-                <Button.Content>
-                    <m:PackIcon Height="25"  Width="25" Kind="Plus"></m:PackIcon>
-                </Button.Content>
-            </Button>
-            <DataGrid AutoGenerateColumns="False" Name="ClaimChecks"  CanUserAddRows="False" Background="#FFF">
-                <DataGrid.Columns>
+            <StackPanel> 
+           
+            <Border Background="#f2f2f2" Padding="0 30 0 30">
+                    <DataGrid GridLinesVisibility="None" HeadersVisibility="None"  PreviewMouseWheel="ClaimChecks_PreviewMouseWheel" AutoGenerateColumns="False" Name="ClaimChecks"  CanUserAddRows="False" Background="Transparent">
+                    <DataGrid.Resources>
 
-                    <DataGridTextColumn Header="File Number"  Binding="{Binding Path=FileNumber, Mode=TwoWay}" Width="211" />
-                    <DataGridTextColumn Header="Description"  Binding="{Binding Path=Description, Mode=TwoWay}" Width="*" />
-                    <DataGridTextColumn Header="Check Amount"  Binding="{Binding Path=CheckAmount, Mode=TwoWay, StringFormat='c'}" Width="150" />
-                    <DataGridTemplateColumn Width="55">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
-                                    <Button.Content>
-                                        <m:PackIcon Kind="Delete" ></m:PackIcon>
-                                    </Button.Content>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  Color="#FF0000"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"  Color="#FF0000"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"  Color="#FF0000"/>
+                        <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="#000" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#f2f2f2" />
+                                    <Setter Property="Foreground" Value="#000" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Trigger>
+                               
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="Background" Value="#f2f2f2" />
+                            <Setter Property="Margin" Value="0 10 0 10" />
+                            <Setter Property="Foreground" Value="#000" />
+                               
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="DataGridRow.IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="#000" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                </Trigger>
+                                <Trigger Property="DataGridRow.IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#f2f2f2" />
+                                    <Setter Property="Foreground" Value="#000" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                </Trigger>
+                                
+                            </Style.Triggers>
+                        </Style>
+                            
+                        </DataGrid.Resources>
+                <DataGrid.Columns> 
+                    
+                        <DataGridTemplateColumn Width="*" >
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                        <Border HorizontalAlignment="Stretch" Padding="35 25 0 35" CornerRadius="2" MaxWidth="800" Margin="30 10 30 0" BorderBrush="Transparent" BorderThickness="0" m:ShadowAssist.ShadowDepth="Depth0" Background="#FFFFFF"  Style="{StaticResource BorderCard}">
+                                            <Border.Resources>
+                                                
+                                            </Border.Resources>
+                                            <Grid>
+                                               
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="250" /> 
+                                            <ColumnDefinition Width="20" /> 
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=FileNumber, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="File #" />
+                                                <ComboBox Margin="0 -3 15 15" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"  ItemsSource="{Binding InsuranceCompanies,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=From}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="From" />
+                                        
+                                        <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" Text="{Binding Path=CheckNumber, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Check #" />
+
+
+                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="250" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Margin="0 0 15 15" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Description" />
+                                                <TextBox Margin="0 0 15 15" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Amt" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="250" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=PropertyDamageDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Description" />
+                                                <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=PropertyDamageAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Amt" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="250" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=OtherDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Description" />
+                                                <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
+                                            </Grid>
+                                        </StackPanel>
+                                                <Button Margin="0 -80 5 0" Grid.Column="3" Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
+                                                    <Button.Content>
+                                                        <m:PackIcon Kind="Close" ></m:PackIcon>
+                                                    </Button.Content>
+                                                </Button>
+                                            </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        
+                       
                 </DataGrid.Columns>
-            </DataGrid>
+                    </DataGrid>
+                </Border>
+                
         </StackPanel>
-        <Border Padding="15 5 0 0" Grid.Column="1" VerticalAlignment="Top">
-        <ComboBox m:HintAssist.Hint="Client" m:HintAssist.IsFloating="True" Name="clientDropdown" >
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
+            
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Border Padding="15">
+            <Button  Name="CheckSubmit" Click="CheckSubmit_Click" Margin="0 0 0 0" Height="50"  m:ShadowAssist.ShadowDepth="Depth0" HorizontalAlignment="Stretch">
+                <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="{Binding Name}" Width="16" Height="16" Margin="0,2,5,2" />
-                        <TextBlock Text="{Binding Name}" />
+                        <m:PackIcon VerticalAlignment="Center" Margin="0 0 9 0" Kind="Bank" Width="18" Height="18"></m:PackIcon>
+                        <TextBlock Text="Submit All" FontWeight="Light" FontSize="18"  VerticalAlignment="Center" />
                     </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        </Border>
+                </Button.Content>
+                </Button>
+            </Border>
+        </StackPanel>
     </Grid>
 </local:InjectableUserControl>

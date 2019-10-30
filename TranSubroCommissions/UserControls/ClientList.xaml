@@ -20,7 +20,23 @@
                 <DataGridTextColumn Header="Client"  Binding="{Binding Path=Name}" Width="211" />
                 <DataGridTextColumn Header="Old Claim Date"  Binding="{Binding  Path=ThresholdDate, StringFormat='MM/dd/yyyy'}" Width="*" />
                 <DataGridTextColumn Header="Old %"  Binding="{Binding  Path=TransubroPercentageOld, StringFormat='p0'}" Width="80" />
-                <DataGridTextColumn Header="New %"  Binding="{Binding Path=TransubroPercentageNew, StringFormat='p0'}" Width="80" />  
+                <DataGridTextColumn Header="New %"  Binding="{Binding Path=TransubroPercentageNew, StringFormat='p0'}" Width="80" />
+                <DataGridTemplateColumn Width="155">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Margin="0 -7 0 0" Name="DeleteCheck"  m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
+                                <Button.Content>
+                                    <Border >
+                                        <StackPanel Orientation="Horizontal">
+                                            <m:PackIcon Kind="Add" Margin="0 2 4 0" ></m:PackIcon>
+                                            <TextBlock FontSize="13" FontWeight="Light" Text="Add Claim" /> 
+                                        </StackPanel>
+                                    </Border>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>  
     </Grid>

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transubro.CMS.API", "Transu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transubro.CMS.Model", "Transubro.CMS.Model\Transubro.CMS.Model.csproj", "{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transubro.CMS.Integrations", "Transubro.CMS.Integrations\Transubro.CMS.Integrations.csproj", "{1BD96D06-DA49-44E6-A280-E4891B794A7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBXML.NET", "QBXML.NET\QBXML.NET.csproj", "{5F1061CB-D146-4D43-8907-6E0B333B20A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BD96D06-DA49-44E6-A280-E4891B794A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BD96D06-DA49-44E6-A280-E4891B794A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BD96D06-DA49-44E6-A280-E4891B794A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BD96D06-DA49-44E6-A280-E4891B794A7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F1061CB-D146-4D43-8907-6E0B333B20A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F1061CB-D146-4D43-8907-6E0B333B20A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F1061CB-D146-4D43-8907-6E0B333B20A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F1061CB-D146-4D43-8907-6E0B333B20A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

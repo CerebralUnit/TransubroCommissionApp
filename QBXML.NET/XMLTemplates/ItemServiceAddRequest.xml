@@ -1,0 +1,12 @@
+﻿<ItemServiceAddRq>
+  <ItemServiceAdd>
+    <Name>{{Name}}</Name>
+    <SalesOrPurchase>
+      <Desc>{{Description}}</Desc>
+      <Price>{{Price}}</Price>
+      <AccountRef>
+        <FullName>{{AccountName}}</FullName>
+      </AccountRef>
+    </SalesOrPurchase>
+  </ItemServiceAdd>
+</ItemServiceAddRq>

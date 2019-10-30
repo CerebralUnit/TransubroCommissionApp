@@ -20,5 +20,8 @@ namespace Transubro.CMS.Model
         {
             get { return 1 - TransubroPercentageNew; }
         }
+        public Dictionary<string, decimal> SalespersonSplits { get; set; }
     }
+
+   
 }

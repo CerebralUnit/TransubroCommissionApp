@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.QBFC13, Version=13.0.0.23, Culture=neutral, PublicKeyToken=31d8aec643e18259">
+      <HintPath>..\packages\Interop.QBFC13.1.0.1\lib\Interop.QBFC13.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,10 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckDeposit.cs" />
     <Compile Include="Claim.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientInvoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quickbooks\PurchaseOrderAdd.cs" />
+    <Compile Include="SalesCommission.cs" />
     <Compile Include="SalesPerson.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QBXML.NET\QBXML.NET.csproj">
+      <Project>{5f1061cb-d146-4d43-8907-6e0b333b20a7}</Project>
+      <Name>QBXML.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
