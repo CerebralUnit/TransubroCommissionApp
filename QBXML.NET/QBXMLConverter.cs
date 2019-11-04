@@ -56,6 +56,38 @@ namespace QBXML.NET
             return xml;
         }
 
+
+        public string ConvertItem<T>(T item)
+        {
+            string xml = "";
+
+            Type t = typeof(T);
+
+            QuickbooksItemAttribute qbItemAttribute = (QuickbooksItemAttribute)Attribute.GetCustomAttribute(t, typeof(QuickbooksItemAttribute));
+
+            ItemType itemType = qbItemAttribute.GetItemType();
+
+            string accountName = qbItemAttribute.GetAccount();
+
+            var fields = GetQuickbooksFieldValues(item, t);
+
+            if (FieldsAreValidForServiceItemAdd(fields))
+            {
+                var template = GetTemplateText(ItemServiceAddTemplate);
+
+                if (template != null)
+                {
+                    xml = template
+                            .Replace("{{Name}}", fields["Name"].ToString())
+                            .Replace("{{Description}}", fields["Description"].ToString())
+                            .Replace("{{Price}}", fields["Price"].ToString())
+                            .Replace("{{AccountName}}", accountName);
+                }
+            }
+
+            return xml;
+        }
+
         public string ConvertDeposit<T>(T item)
         {
             string xml = "";
@@ -291,19 +323,21 @@ namespace QBXML.NET
 
         
 
-        public string ConvertItems(List<object> items)
+       
+        public string ConvertItems<T>(List<T> items)
         {
             string envelopeXml = GetTemplateText(EnvelopeTemplate);
             string addRequests = "";
 
-            foreach (var item in items )
+            foreach (var item in items)
             {
-                addRequests += ConvertItem(item);
+                addRequests += ConvertItem<T>(item);
             }
 
-            return envelopeXml.Replace("{{Requests}}", addRequests); 
+            return envelopeXml.Replace("{{Requests}}", addRequests);
         }
-         
+
+
         private string GetTemplateText(string templateFile)
         {
             string template = null;
@@ -382,6 +416,124 @@ namespace QBXML.NET
             }
 
             return properties;
+        }
+
+
+
+        public DepositAddResponse ConvertDepositAddResponse(string xml )
+        {
+            var response = new DepositAddResponse();
+
+            var xmlDoc = new XmlDocument(); 
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList responseNode = xmlDoc.GetElementsByTagName("DepositAddRs");
+
+            XmlNodeList depositNode = xmlDoc.GetElementsByTagName("DepositRet");
+            XmlNodeList depositLineNodes = xmlDoc.GetElementsByTagName("DepositLineRet");
+
+            response.Status = new QuickbooksStatus()
+            {
+                Code = int.Parse(responseNode[0].Attributes["statusCode"].Value),
+                Severity = responseNode[0].Attributes["statusSeverity"].Value,
+                Message = responseNode[0].Attributes["statusMessage"].Value
+            };
+
+            response.TxnId = depositNode[0]["TxnID"].InnerText;
+            response.TimeCreated = DateTime.Parse(depositNode[0]["TimeCreated"].InnerText);
+            response.TimeModified = DateTime.Parse(depositNode[0]["TimeModified"].InnerText);
+            response.EditSequence = long.Parse(depositNode[0]["EditSequence"].InnerText);
+            response.TxnNumber = int.Parse(depositNode[0]["TxnNumber"].InnerText);
+            response.TxnDate = DateTime.Parse(depositNode[0]["TxnDate"].InnerText);
+            response.Memo = depositNode[0]["Memo"].InnerText;
+            response.DepositTotal = decimal.Parse(depositNode[0]["DepositTotal"].InnerText);
+
+            response.Lines = new List<DepositLine>();
+
+            response.DepositAccount = new QuickbooksAccount()
+            {
+                ListId = depositNode[0]["DepositToAccountRef"]["ListID"].InnerText,
+                FullName = depositNode[0]["DepositToAccountRef"]["FullName"].InnerText
+            };
+
+            foreach(XmlNode lineNode in depositLineNodes)
+            {
+                response.Lines.Add(new DepositLine() {
+
+                    TxnType = lineNode["TxnType"].InnerText,
+                    TxnLineId = lineNode["TxnLineID"].InnerText,
+                    Memo = lineNode["Memo"].InnerText,
+                    CheckNumber = lineNode["CheckNumber"].InnerText,
+                    Amount = decimal.Parse(lineNode["Amount"].InnerText),
+                    Account = new QuickbooksAccount()
+                    {
+                        ListId = lineNode["AccountRef"]["ListID"].InnerText,
+                        FullName = lineNode["AccountRef"]["FullName"].InnerText
+                    },
+                    Entity = new QuickbooksEntity()
+                    {
+                        ListId = lineNode["EntityRef"]["ListID"].InnerText,
+                        FullName = lineNode["EntityRef"]["FullName"].InnerText
+                    },
+                    Method = new PaymentMethod()
+                    {
+                        ListId = lineNode["PaymentMethodRef"]["ListID"].InnerText,
+                        FullName = lineNode["PaymentMethodRef"]["FullName"].InnerText
+                    } 
+                });
+
+            }
+  
+            return response;
+        }
+
+        public List<ItemServiceAddResponse> ConvertItemServiceAddResponse(string xml)
+        {
+            var response = new List<ItemServiceAddResponse>();
+
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList itemAddResponseNodes = xmlDoc.GetElementsByTagName("ItemServiceAddRs");
+              
+            foreach (XmlNode itemAddNode in itemAddResponseNodes)
+            {
+                XmlNode itemNode= itemAddNode["ItemServiceRet"];
+
+                var itemResponse = new ItemServiceAddResponse();
+                itemResponse.Status = new QuickbooksStatus()
+                {
+                    Code = int.Parse(itemAddNode.Attributes["statusCode"].Value),
+                    Severity = itemAddNode.Attributes["statusSeverity"].Value,
+                    Message = itemAddNode.Attributes["statusMessage"].Value
+                };
+
+                itemResponse.ListId = itemNode["ListID"].InnerText;
+                itemResponse.TimeCreated = DateTime.Parse(itemNode["TimeCreated"].InnerText);
+                itemResponse.TimeModified = DateTime.Parse(itemNode["TimeModified"].InnerText);
+                itemResponse.EditSequence = long.Parse(itemNode["EditSequence"].InnerText);
+                itemResponse.Name = itemNode["Name"].InnerText;
+                itemResponse.FullName = itemNode["FullName"].InnerText;
+                itemResponse.IsActive = bool.Parse(itemNode["IsActive"].InnerText);
+                itemResponse.Sublevel = int.Parse(itemNode["Sublevel"].InnerText);
+
+                itemResponse.Details = new SalesOrPurchase()
+                {
+                    Account = new QuickbooksAccount()
+                    {
+                        ListId = itemNode["SalesOrPurchase"]["AccountRef"]["ListID"].InnerText,
+                        FullName = itemNode["SalesOrPurchase"]["AccountRef"]["FullName"].InnerText
+                    },
+                    Description = itemNode["SalesOrPurchase"]["Desc"].InnerText,
+                    Price = decimal.Parse(itemNode["SalesOrPurchase"]["Price"].InnerText),
+                };
+
+                response.Add(itemResponse);
+            }
+
+            return response;
         }
     }
 }

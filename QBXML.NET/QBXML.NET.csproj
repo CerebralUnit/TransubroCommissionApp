@@ -51,6 +51,15 @@
     <Compile Include="Attributes\QuickbooksVendorAttribute.cs" />
     <Compile Include="Attributes\QuickbooksItemAttribute.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\DepositAddResponse.cs" />
+    <Compile Include="Model\DepositLine.cs" />
+    <Compile Include="Model\ItemServiceAddResponse.cs" />
+    <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\QuickbooksEntity.cs" />
+    <Compile Include="Model\QuickbooksAccount.cs" />
+    <Compile Include="Model\QuickbooksResponseBase.cs" />
+    <Compile Include="Model\QuickbooksStatus.cs" />
+    <Compile Include="Model\SalesPurchase.cs" />
     <Compile Include="Model\ServiceItem.cs" />
     <Compile Include="Model\Vendor.cs" />
     <Compile Include="QBXMLConverter.cs" />

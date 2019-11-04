@@ -109,10 +109,10 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=FileNumber, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="File #" />
-                                                <ComboBox Margin="0 -3 15 15" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"  ItemsSource="{Binding InsuranceCompanies,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=From}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="From" />
-                                        
-                                        <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" Text="{Binding Path=CheckNumber, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Check #" />
+                                                <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=FileNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="File #" />
+                                                <ComboBox Margin="0 -3 15 15" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"  ItemsSource="{Binding InsuranceCompanies,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=From, UpdateSourceTrigger=PropertyChanged}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="From" />
+
+                                                <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" Text="{Binding Path=CheckNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Check #" />
 
 
                                         <StackPanel Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
@@ -121,24 +121,24 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox Margin="0 0 15 15" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Description" />
-                                                <TextBox Margin="0 0 15 15" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Amt" />
+                                                        <TextBox Margin="0 0 15 15" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Description" />
+                                                        <TextBox Margin="0 0 15 15" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Amt" />
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=PropertyDamageDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Description" />
-                                                <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=PropertyDamageAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Amt" />
+                                                        <TextBox Name="PDDesc" Margin="0 0 15 15" Grid.Column="0" LostFocus="PDDesc_LostFocus" Text="{Binding Path=PropertyDamageDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Description" />
+                                                        <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=PropertyDamageAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Amt" />
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=OtherDescription, Mode=TwoWay}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Description" />
-                                                <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
+                                                        <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=OtherDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Description" />
+                                                        <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
                                             </Grid>
                                         </StackPanel>
                                                 <Button Margin="0 -80 5 0" Grid.Column="3" Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">

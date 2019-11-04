@@ -126,21 +126,30 @@ namespace QBXML.NET
 
             return ProcessRequest(xml);
         }
-        public string AddDeposit<T>(T deposit)
+        public DepositAddResponse AddDeposit<T>(T deposit)
         {
             var converter = new QBXMLConverter();
 
             string xml = converter.ConvertDeposit(deposit);
 
-            return ProcessRequest(xml);
+            string depositResponseXml = ProcessRequest(xml);
+
+            DepositAddResponse response = converter.ConvertDepositAddResponse(depositResponseXml);
+
+            return response;
         }
-        public string AddItems(List<object> items)
+      
+        public List<ItemServiceAddResponse> AddItems<T>(List<T> items)
         {
             var converter = new QBXMLConverter();
 
             string xml = converter.ConvertItems(items);
 
-            return ProcessRequest(xml);
+            string itemAddResponseXml = ProcessRequest(xml);
+
+            List<ItemServiceAddResponse> response = converter.ConvertItemServiceAddResponse(itemAddResponseXml);
+
+            return response;
         }
     }
 }

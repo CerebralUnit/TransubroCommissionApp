@@ -68,9 +68,12 @@ namespace Transubro.CMS.API
         {
             var qbc = new QuickbooksClient(AppName);
 
-            var claims = new List<object>();
-            string depositResponses = "";
-            string itemResponse = "";
+            var claims = new List<Claim>();
+
+            var depositResponses = new List<DepositAddResponse>();
+
+            var itemResponses = new List<ItemServiceAddResponse>();
+
             foreach (var deposit in deposits)
             {
                 if (deposit.PropertyDamageAmount > 0)
@@ -79,7 +82,7 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = deposit.PropertyDamageAmount,
                         Description = deposit.PropertyDamageDescription,
-                        FileNumber = deposit.FileNumber
+                        FileNumber = deposit.FileNumber + "-PD"
                     });
                 }
 
@@ -89,14 +92,25 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = deposit.LossOfUseAmount,
                         Description = deposit.LossOfUseDescription,
-                        FileNumber = deposit.FileNumber
+                        FileNumber = deposit.FileNumber + "-LOU"
                     });
                 }
 
-                depositResponses += qbc.AddDeposit(deposit);
+
+                if (deposit.OtherAmount > 0)
+                {
+                    claims.Add(new Claim()
+                    {
+                        CheckAmount = deposit.OtherAmount,
+                        Description = deposit.OtherDescription,
+                        FileNumber = deposit.FileNumber + "-OTH"
+                    });
+                }
+
+                depositResponses.Add(qbc.AddDeposit(deposit));
             }
 
-            itemResponse = qbc.AddItems(claims);
+            itemResponses = qbc.AddItems(claims);
              
             return true;
         }

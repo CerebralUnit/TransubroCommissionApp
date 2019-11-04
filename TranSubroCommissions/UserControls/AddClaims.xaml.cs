@@ -161,5 +161,10 @@ namespace TranSubroCommissions
                 parent?.RaiseEvent(eventArg);
             }
         }
+
+        private void PDDesc_LostFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
