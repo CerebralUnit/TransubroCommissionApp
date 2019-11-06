@@ -1,0 +1,26 @@
+﻿<local:InjectableUserControl x:Class="TranSubroCommissions.InvoiceProcessor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TranSubroCommissions" 
+            xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" Background="#FFFFFF"
+             d:DesignHeight="900" d:DesignWidth="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Padding="15 5" Grid.Row="0" Background="#f2f2f2">
+            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Name="StartButton" Click="StartButton_Click" Height="40" VerticalAlignment="Stretch" m:ShadowAssist.ShadowDepth="Depth0" Content="Start" />
+                <DatePicker FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="EndDate" HorizontalAlignment="Right" m:HintAssist.Hint="End Date" />
+                <DatePicker FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="StartDate" HorizontalAlignment="Right" m:HintAssist.Hint="Start Date" />
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="1">
+            
+        </Border>
+    </Grid>
+</local:InjectableUserControl>

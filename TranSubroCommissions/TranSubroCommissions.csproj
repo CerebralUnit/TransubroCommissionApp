@@ -92,6 +92,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\InvoiceProcessor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\SalespersonList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -110,6 +114,9 @@
     </Compile>
     <Compile Include="UserControls\AddClaims.xaml.cs">
       <DependentUpon>AddClaims.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InvoiceProcessor.xaml.cs">
+      <DependentUpon>InvoiceProcessor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SalespersonList.xaml.cs">
       <DependentUpon>SalespersonList.xaml</DependentUpon>

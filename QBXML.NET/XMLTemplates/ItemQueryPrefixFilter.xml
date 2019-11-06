@@ -1,0 +1,4 @@
+﻿<NameFilter>
+  <MatchCriterion>StartsWith</MatchCriterion>
+  <Name>{{Prefix}}</Name>
+</NameFilter>

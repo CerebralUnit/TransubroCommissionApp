@@ -61,7 +61,7 @@ namespace TranSubroCommissions
             //var deposit = qbc.DepositCheck ();
             var payrollItems = qbc.GetActivePayrollItemsWage();
 
-            var employee = qbc.SearchEmployeesByName("Rudd Lowry");
+            var employee = qbc.SearchEmployeesByName("{salesperson}");
             var deposits = qbc.GetDepositsByDateRange(new DateTime(2019, 10, 20), new DateTime(2019, 12, 21));
 
             var insuranceCompanies = qbService.GetInsuranceCompanies();

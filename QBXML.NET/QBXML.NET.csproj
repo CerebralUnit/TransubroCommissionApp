@@ -51,12 +51,17 @@
     <Compile Include="Attributes\QuickbooksVendorAttribute.cs" />
     <Compile Include="Attributes\QuickbooksItemAttribute.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\DepositQueryResponse.cs" />
     <Compile Include="Model\DepositAddResponse.cs" />
     <Compile Include="Model\DepositLine.cs" />
+    <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\ItemServiceAddResponse.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\PayrollWageItem.cs" />
+    <Compile Include="Model\QuickbooksDeposit.cs" />
     <Compile Include="Model\QuickbooksEntity.cs" />
     <Compile Include="Model\QuickbooksAccount.cs" />
+    <Compile Include="Model\QuickbooksEntityBase.cs" />
     <Compile Include="Model\QuickbooksResponseBase.cs" />
     <Compile Include="Model\QuickbooksStatus.cs" />
     <Compile Include="Model\SalesPurchase.cs" />
@@ -72,6 +77,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="XMLTemplates\CustomerQuery.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XMLTemplates\ItemQueryPrefixFilter.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

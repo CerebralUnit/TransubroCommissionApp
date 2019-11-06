@@ -14,12 +14,18 @@
     <Grid Background="#01FFFFFF" Margin="0"> 
         <Border Padding="0"> 
             <dragablz:TabablzControl Background="#ffffff"   BorderThickness="0" >
+                <TabItem Header="Generate Invoices">
+                    <Border Padding="0">
+                        <local:InvoiceProcessor></local:InvoiceProcessor>
+                    </Border>
+                </TabItem>
                 <TabItem Header="New Claims">
                     <Border Padding="0">
                         <local:AddClaims></local:AddClaims>
                     </Border>
                 </TabItem>
-                <TabItem Header="New Client" > 
+                
+                <!--<TabItem Header="New Client" > 
                     <Border Padding="15">
                         <local:NewClientScreen></local:NewClientScreen>
                     </Border>
@@ -34,7 +40,7 @@
                     <Border Padding="15">
                         <local:SalespersonList></local:SalespersonList>
                     </Border>
-                </TabItem>
+                </TabItem>-->
             </dragablz:TabablzControl>  
         </Border>
     </Grid>

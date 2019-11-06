@@ -22,7 +22,9 @@ namespace QBXML.NET
         private const string DepositQueryTemplate = @"XMLTemplates\DepositQuery.xml";
         private const string PayrollItemQueryTemplate = @"XMLTemplates\PayrollItemQuery.xml";
         private const string EmployeeQueryTemplate = @"XMLTemplates\EmployeeQueryByName.xml"; 
-        private const string CustomerQueryTemplate = @"XMLTemplates\CustomerQuery.xml"; 
+        private const string CustomerQueryTemplate = @"XMLTemplates\CustomerQuery.xml";
+        private const string ItemPrefixFilterTemplate = @"XMLTemplates\ItemQueryPrefixFilter.xml";
+        
 
 
         public string ConvertItem(object item )
@@ -191,6 +193,94 @@ namespace QBXML.NET
             return response;
         }
 
+        public List<PayrollWageItem> DeserializePayrollWageQuery(string xml)
+        {
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList payrollNodes = xmlDoc.GetElementsByTagName("PayrollItemWageRet");
+
+            var response = new List<PayrollWageItem>();
+
+            foreach (XmlNode node in payrollNodes)
+            {
+                var expenseAccountNode = node["ExpenseAccountRef"];
+
+                response.Add( new PayrollWageItem()
+                { 
+                    EditSequence = long.Parse(node["EditSequence"].InnerText),
+                    Name = node["Name"].InnerText,
+                    IsActive = bool.Parse(node["IsActive"].InnerText), 
+                    TimeCreated = DateTime.Parse(node["TimeCreated"].InnerText),
+                    TimeModified = DateTime.Parse(node["TimeModified"].InnerText),
+                    ListID = node["ListID"].InnerText,    
+                    ExpenseAccount = new QuickbooksAccount()
+                    {
+                        FullName = expenseAccountNode["FullName"].InnerText,
+                        ListId = expenseAccountNode["ListID"].InnerText
+                    },
+                    WageType = node["WageType"].InnerText 
+                });
+            }
+
+            return response;
+        }
+        public List<Employee> DeserializeEmployeeQueryResponse(string xml)
+        {
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList employeeResponseNodes = xmlDoc.GetElementsByTagName("EmployeeRet");
+
+            var response = new List<Employee>();
+
+            foreach (XmlNode node in employeeResponseNodes)
+            {
+                var payrollNode = node["EmployeePayrollInfo"];
+
+                var employee = new Employee()
+                {
+                    FirstName = node["FirstName"].InnerText,
+                    LastName = node["LastName"].InnerText,
+                    EditSequence = long.Parse(node["EditSequence"].InnerText),
+                    Name = node["Name"].InnerText,
+                    IsActive = bool.Parse(node["IsActive"].InnerText),
+                    PrintAs = node["PrintAs"].InnerText,
+                    EmployeeType = node["EmployeeType"].InnerText,
+                    HiredDate = DateTime.Parse(node["HiredDate"].InnerText),
+                    TimeCreated = DateTime.Parse(node["TimeCreated"].InnerText),
+                    TimeModified = DateTime.Parse(node["TimeModified"].InnerText),
+                    ListID = node["ListID"].InnerText,
+                    PayPeriod = payrollNode["PayPeriod"].InnerText,
+                    Earnings = new List<PayrollItem>() 
+                };
+
+                foreach(XmlNode payrollItem in payrollNode.ChildNodes)
+                {
+                    if (payrollItem.Name != "Earnings" || payrollItem["PayrollItemWageRef"] == null)
+                        continue;
+
+                    var wageNode = payrollItem["PayrollItemWageRef"];
+                     
+                    bool isPercent = payrollItem["RatePercent"] != null;
+
+                    employee.Earnings.Add(new PayrollItem()
+                    {
+                        AmountType = isPercent ? "Percent" : "Amount",
+                        Amount = isPercent ? decimal.Parse(payrollItem["RatePercent"].InnerText) : decimal.Parse(payrollItem["Rate"].InnerText),
+                        FullName = wageNode["FullName"].InnerText,
+                        ListId = wageNode["FullName"].InnerText,
+                        Type = "Wage"
+                    }); 
+                }
+
+                response.Add(employee);
+            }
+            return response;
+        }
+
         public string ConvertEmployeeQuery(string name)
         {
             var template = GetTemplateText(EmployeeQueryTemplate);
@@ -258,7 +348,24 @@ namespace QBXML.NET
         {
             return GetTemplateText(@"XMLTemplates\TestPurchaseOrderAdd.xml");
         }
+        public string ConvertItemQueryByDateRangePrefix(List<string> prefixes, DateTime startDate, DateTime endDate)
+        {
+            var template = GetTemplateText(ItemQueryDateRangePrefixTemplate); 
+            string xml = "";
 
+            if (template != null)
+            {
+                foreach(var prefix in prefixes)
+                {
+                    xml += template
+                        .Replace("{{StartDate}}", startDate.ToString("yyyy-MM-dd"))
+                        .Replace("{{Prefix}}", prefix)
+                        .Replace("{{EndDate}}", endDate.ToString("yyyy-MM-dd"));
+                } 
+            }
+
+            return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
+        }
         public string ConvertItemQueryByDateRangePrefix(string prefix, DateTime startDate, DateTime endDate)
         {
             var template = GetTemplateText(ItemQueryDateRangePrefixTemplate);
@@ -485,6 +592,87 @@ namespace QBXML.NET
 
             }
   
+            return response;
+        }
+
+        public DepositQueryResponse ConvertDepositQueryResponse(string xml)
+        {
+            var response = new DepositQueryResponse();
+
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList responseNode = xmlDoc.GetElementsByTagName("DepositQueryRs");
+
+            XmlNodeList depositNodes = xmlDoc.GetElementsByTagName("DepositRet");
+            
+            response.Status = new QuickbooksStatus()
+            {
+                Code = int.Parse(responseNode[0].Attributes["statusCode"].Value),
+                Severity = responseNode[0].Attributes["statusSeverity"].Value,
+                Message = responseNode[0].Attributes["statusMessage"].Value
+            };
+
+            response.Deposits = new List<QuickbooksDeposit>();
+
+            foreach(XmlNode depositNode in depositNodes)
+            {
+                XmlNodeList childNodes = depositNode.ChildNodes; 
+
+                var deposit = new QuickbooksDeposit()
+                {
+                    TxnId = depositNode["TxnID"].InnerText,
+                    TimeCreated = DateTime.Parse(depositNode["TimeCreated"].InnerText),
+                    TimeModified = DateTime.Parse(depositNode["TimeModified"].InnerText),
+                    EditSequence = long.Parse(depositNode["EditSequence"].InnerText),
+                    TxnNumber = int.Parse(depositNode["TxnNumber"].InnerText),
+                    TxnDate = DateTime.Parse(depositNode["TxnDate"].InnerText),
+                    Memo = depositNode["Memo"].InnerText,
+                    DepositTotal = decimal.Parse(depositNode["DepositTotal"].InnerText),
+
+                    Lines = new List<DepositLine>(),
+
+                    DepositAccount = new QuickbooksAccount()
+                    {
+                        ListId = depositNode["DepositToAccountRef"]["ListID"].InnerText,
+                        FullName = depositNode["DepositToAccountRef"]["FullName"].InnerText
+                    } 
+                };
+
+                foreach (XmlNode lineNode in childNodes )
+                {
+                    if (lineNode.Name != "DepositLineRet")
+                        continue;
+
+                    deposit.Lines.Add(new DepositLine()
+                    { 
+                        TxnType = lineNode["TxnType"].InnerText,
+                        TxnLineId = lineNode["TxnLineID"].InnerText,
+                        Memo = lineNode["Memo"].InnerText,
+                        CheckNumber = lineNode["CheckNumber"].InnerText,
+                        Amount = decimal.Parse(lineNode["Amount"].InnerText),
+                        Account = new QuickbooksAccount()
+                        {
+                            ListId = lineNode["AccountRef"]["ListID"].InnerText,
+                            FullName = lineNode["AccountRef"]["FullName"].InnerText
+                        },
+                        Entity = new QuickbooksEntity()
+                        {
+                            ListId = lineNode["EntityRef"]["ListID"].InnerText,
+                            FullName = lineNode["EntityRef"]["FullName"].InnerText
+                        },
+                        Method = new PaymentMethod()
+                        {
+                            ListId = lineNode["PaymentMethodRef"]["ListID"].InnerText,
+                            FullName = lineNode["PaymentMethodRef"]["FullName"].InnerText
+                        }
+                    }); 
+                }
+
+                response.Deposits.Add(deposit);
+            }
+             
             return response;
         }
 

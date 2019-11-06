@@ -35,12 +35,19 @@ namespace QBXML.NET
             return sendXMLtoQB;
         }
 
-        public string GetActivePayrollItemsWage()
+        public List<PayrollWageItem> GetActivePayrollItemsWage()
         {
-            var xml = new QBXMLConverter().GetPayrollItemQuery();
+            var converter = new QBXMLConverter();
 
-            return ProcessRequest(xml);
+            var xml = converter.GetPayrollItemQuery();
+
+            string responseXml = ProcessRequest(xml);
+
+            List<PayrollWageItem> payrollItems = converter.DeserializePayrollWageQuery(responseXml);
+             
+            return payrollItems;
         }
+
         public List<Customer> GetActiveCustomers()
         {
             var converter = new QBXMLConverter();
@@ -52,11 +59,17 @@ namespace QBXML.NET
 
             return customers;
         }
-        public string SearchEmployeesByName(string name)
+        public List<Employee> SearchEmployeesByName(string name)
         {
-            var xml = new QBXMLConverter().ConvertEmployeeQuery(name);
+            var converter = new QBXMLConverter();
 
-            return ProcessRequest(xml);
+            string xml = converter.ConvertEmployeeQuery(name);
+
+            string responseXml = ProcessRequest(xml);
+
+            List<Employee> employees = converter.DeserializeEmployeeQueryResponse(responseXml);
+
+            return employees;
         }
 
         public string SearchItemsByDateModified(DateTime startDate, DateTime endDate)
@@ -86,17 +99,51 @@ namespace QBXML.NET
 
             return ProcessRequest(xml);
         }
-        public string GetDepositsByDateRange(DateTime startDate, DateTime endDate)
+        public List<QuickbooksDeposit> GetDepositsByDateRange(DateTime startDate, DateTime endDate)
         {
-            var xml = new QBXMLConverter().ConvertDepositQuery(startDate, endDate);
+            var converter = new QBXMLConverter();
+
+            string xml = converter.ConvertDepositQuery(startDate, endDate);
+          
+            string queryResponseXml = ProcessRequest(xml);
+
+            DepositQueryResponse response = converter.ConvertDepositQueryResponse(queryResponseXml);
+
+            var results = new List<QuickbooksDeposit>();
+
+            if (response.Status.Code == 0) 
+                results = response.Deposits; 
+
+            return results; 
+        }
+
+        public string SearchItemsByNamePrefixAndDateModified(List<string> prefix, DateTime startDate, DateTime endDate)
+        {
+            var converter = new QBXMLConverter();
+
+            var xml = converter.ConvertItemQueryByDateRangePrefix(prefix, startDate, endDate);
 
             return ProcessRequest(xml);
         }
+
         public string SearchItemsByNamePrefixAndDateModified(string prefix, DateTime startDate, DateTime endDate)
         {
             var xml = new QBXMLConverter().ConvertItemQueryByDateRangePrefix(prefix, startDate, endDate);
 
             return ProcessRequest(xml);
+        }
+
+        public List<T> SearchItems<T>(List<string> prefix, DateTime startDate, DateTime endDate) where T : new()
+        {
+            var converter = new QBXMLConverter();
+
+            var requestXml = converter.ConvertItemQueryByDateRangePrefix(prefix, startDate, endDate);
+
+            string responseXml = ProcessRequest(requestXml);
+
+            var items = converter.DeserializeItemQueryResponse<T>(responseXml);
+
+            return items;
         }
 
         public List<T> SearchItems<T>(string prefix, DateTime startDate, DateTime endDate) where T:new()

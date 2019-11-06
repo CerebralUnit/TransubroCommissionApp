@@ -33,6 +33,13 @@ namespace Transubro.CMS.API
             return clients;
         }
 
+        public List<PayrollWageItem> GetActivePayrollItemsWage()
+        {
+            var qbc = new QuickbooksClient(AppName);
+
+            return qbc.GetActivePayrollItemsWage();
+        }
+
         public List<string> GetInsuranceCompanies()
         {
             var qbc = new QuickbooksClient(AppName);
@@ -40,6 +47,13 @@ namespace Transubro.CMS.API
             List<Customer> customers = qbc.GetActiveCustomers();
 
             return customers.Where(x => x.CustomerType == "Insurance Company").Select(x => x.FullName).ToList();
+        }
+
+        public List<Claim> SearchClaims(List<string> fileNumbers, DateTime startDate, DateTime endDate)
+        {
+            var qbc = new QuickbooksClient(AppName);
+ 
+            return qbc.SearchItems<Claim>(fileNumbers, startDate, endDate);
         }
 
         public List<Claim> SearchClaims(string client, DateTime startDate, DateTime endDate)
@@ -57,7 +71,7 @@ namespace Transubro.CMS.API
 
             return qbc.DepositCheck();
         }
-        public string GetDepositsByDateRange(DateTime startDate, DateTime endDate)
+        public List<QuickbooksDeposit> GetDepositsByDateRange(DateTime startDate, DateTime endDate)
         {
             var qbc = new QuickbooksClient(AppName);
 
