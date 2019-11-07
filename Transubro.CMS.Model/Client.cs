@@ -8,6 +8,11 @@ namespace Transubro.CMS.Model
 {
     public class Client
     {
+        public Client()
+        {
+            SalespersonSplits = new List<SalesCommission>();
+        }
+
         public string Name { get; set; }
         public DateTime? ThresholdDate { get; set; }
         public decimal TransubroPercentageOld { get; set; }
@@ -20,8 +25,8 @@ namespace Transubro.CMS.Model
         {
             get { return 1 - TransubroPercentageNew; }
         }
-        public Dictionary<string, decimal> SalespersonSplits { get; set; }
+        public List<SalesCommission> SalespersonSplits { get; set; }
     }
 
-   
+    
 }

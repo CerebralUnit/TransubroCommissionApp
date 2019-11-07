@@ -8,7 +8,8 @@ namespace Transubro.CMS.Model
 {
     public class SalesCommission
     {
-        public string SalesPersonId { get; set; }
-        public decimal? Commission { get; set; }
+        public string SalesPersonName { get; set; }
+        public string AmountType { get; set; }
+        public decimal? Amount { get; set; }
     }
 }

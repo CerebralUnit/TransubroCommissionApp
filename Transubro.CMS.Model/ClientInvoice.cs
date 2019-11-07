@@ -8,7 +8,11 @@ namespace Transubro.CMS.Model
 {
     public class ClientInvoice
     {
+        public ClientInvoice()
+        {
+            Claims = new List<Claim>();
+        }
         public string Client { get; set; }
-        List<Claim> Claims { get; set; }
+        public List<Claim> Claims { get; set; }
     }
 }

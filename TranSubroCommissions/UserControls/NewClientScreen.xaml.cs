@@ -47,7 +47,7 @@ namespace TranSubroCommissions
             var commission = ((ComboBox)sender).DataContext as SalesCommission;
             var salesperson = ((ComboBox)sender).SelectedItem as SalesPerson;
 
-            commission.SalesPersonId = salesperson.Id;
+            commission.SalesPersonName = salesperson.Name;
         }
 
         private void NewCommission_Click(object sender, RoutedEventArgs e)
@@ -88,8 +88,8 @@ namespace TranSubroCommissions
             }
             else
             {
-                commissions[0].Commission = null;
-                commissions[0].SalesPersonId = null;
+                commissions[0].Amount = null;
+                commissions[0].SalesPersonName = null;
             }
             CommissionsList.Items.Refresh();
 
@@ -102,12 +102,12 @@ namespace TranSubroCommissions
             decimal parsedAmount;
             if(decimal.TryParse(amount, out parsedAmount))
             {
-                commission.Commission = parsedAmount;
+                commission.Amount = parsedAmount;
 
             }
             else
             {
-                commission.Commission = null;
+                commission.Amount = null;
             }
         }
     }

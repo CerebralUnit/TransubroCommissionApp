@@ -13,11 +13,21 @@ namespace Transubro.CMS.Model
     {
         [QuickbooksField("Name")]
         public string FileNumber { get; set; }
-         
-        [QuickbooksField("Description")] 
+
+        [QuickbooksField("Description")]
         public string Description { get; set; }
 
         [QuickbooksField("Price")]
-        public decimal CheckAmount { get; set; } 
+        public decimal CheckAmount { get; set; }
+
+        public decimal ClientPercentDecimal { get; set; }
+
+        public decimal ClientDue
+        {
+            get
+            {
+                return CheckAmount * ClientPercentDecimal;
+            }
+        }
     }
 }
