@@ -21,7 +21,11 @@
         </Border>
         <Border Grid.Row="1">
             <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock  Padding="15 0" Name="StatusBlock" LineHeight="25"></TextBlock>
+                <TextBox Background="Transparent"
+         BorderThickness="0"
+         Text="{Binding Text, Mode=OneWay}"
+         IsReadOnly="True"
+         TextWrapping="Wrap"  Padding="15 0" Name="StatusBlock" ></TextBox>
             </ScrollViewer>
         </Border>
     </Grid>

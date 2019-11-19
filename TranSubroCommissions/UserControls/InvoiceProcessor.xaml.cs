@@ -56,6 +56,7 @@ namespace TranSubroCommissions
                 var qb = new QuickbooksService();
 
                 UpdateStatus("Getting deposits from between dates");
+                UpdateStatus(" ");
                 List<QuickbooksDeposit> deposits = qb.GetDepositsByDateRange(startDate.Value, endDate.Value);
 
                 Dictionary<string, List<QuickbooksDeposit>> depositsByClient = deposits
@@ -66,6 +67,7 @@ namespace TranSubroCommissions
 
 
                 UpdateStatus("Gathering clients");
+                UpdateStatus(" ");
                 List<string> clientNames = deposits.Select(x => x.Memo.Substring(0, x.Memo.IndexOf("-"))).Distinct().ToList();
 
                 Dictionary<string, Client> clients = qb.GetClients().Where(x => clientNames.Contains(x.Name)).ToDictionary(x => x.Name, x => x);
@@ -75,6 +77,7 @@ namespace TranSubroCommissions
 
 
                 UpdateStatus("Retrieving items to create invoice lines");
+                UpdateStatus(" ");
                 List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
 
                 Dictionary<string, List<Claim>> claimsByClient = claims
@@ -85,24 +88,28 @@ namespace TranSubroCommissions
 
 
                 UpdateStatus("Retrieving salesperson commission list");
+                UpdateStatus(" ");
                 List<Employee> salespersons = qbc.SearchEmployeesByName("{salesperson}");
 
                 Dictionary<string, PayrollWageItem> commissionItems = qb.GetActivePayrollItemsWage().Where(x => x.WageType == "Commission").ToDictionary(x => x.Name, x => x);
  
                 UpdateStatus("Building client invoices");
-
+                UpdateStatus(" ");
                 foreach (var client in clients)
                 { 
                     if (!claimsByClient.ContainsKey(client.Key))
                     {
                         UpdateStatus("No deposits were found for " + client.Key);
+                        UpdateStatus(" ");
                         continue;
                     }
                     else
                     {
-
+                        UpdateStatus(" ");
+                        UpdateStatus(" ");
+                        UpdateStatus(" ");
                         UpdateStatus("_______________________________________________________________________");
-                        UpdateStatus("Building invoice for " + client.Key + "");
+                        UpdateStatus("Building client invoice for " + client.Key + "");
                     }
 
                     var invoice = new ClientInvoice()
@@ -122,7 +129,7 @@ namespace TranSubroCommissions
                     {
                         decimal clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
                         decimal dueClient = clientPercent * claim.CheckAmount;
-
+                        UpdateStatus("----------------------------------------------------------------------------------------");
                         UpdateStatus(line + ". " + claim.FileNumber + "....." + claim.Description + "....." + claim.CheckAmount.ToString("c") + "....." + dueClient.ToString("c") + " Due Client");
 
                         clientDueTotal += dueClient;
@@ -131,22 +138,35 @@ namespace TranSubroCommissions
                     }
 
                     string items = invoice.Claims.Count > 1 ? "items" : "item";
+                    UpdateStatus("----------------------------------------------------------------------------------------");
                     UpdateStatus("Total: " + invoiceTotal.ToString("c"));
                     UpdateStatus("Client Due: " + clientDueTotal.ToString("c"));
                     UpdateStatus("Invoice complete");
                     //Build client invoice
+                    UpdateStatus(" ");
+                    UpdateStatus(" ");
+                    UpdateStatus(" ");
                 }
-
+                UpdateStatus(" ");
                 UpdateStatus("Client invoices complete.");
-
+                UpdateStatus(" ");
                 UpdateStatus("Building salesperson invoices");
-
+                UpdateStatus(" ");
                 foreach (var salesperson in salespersons)
                 {
+                    UpdateStatus(" ");
+                    UpdateStatus(" ");
+                    UpdateStatus(" ");
+
                     int line = 1;
-                    UpdateStatus("Building commission invoice for " + salesperson.Name);
+
+                    UpdateStatus("_______________________________________________________________________"); 
+                    UpdateStatus("Building sales commission invoice for " + salesperson.Name);
+                    UpdateStatus("----------------------------------------------------------------------------------------");
+
                     decimal invoiceTotal = 0;
                     decimal salesDueTotal = 0;
+
                     foreach(var commission in salesperson.Earnings)
                     {
                         if(claimsByClient.ContainsKey(commission.FullName))
@@ -158,16 +178,23 @@ namespace TranSubroCommissions
                                 decimal companyPercent = GetCompanyPercentForCheck(clientClaim.FileNumber, clients[commission.FullName]);
                                 decimal companyAmount = companyPercent * clientClaim.CheckAmount;
                                 decimal salesPersonDue = (commission.Amount/100) * companyAmount;
-
+                                
                                 UpdateStatus(line + ". " + clientClaim.FileNumber + "....." + clientClaim.Description + "....." + clientClaim.CheckAmount.ToString("c") + "....." + salesPersonDue.ToString("c") + " Commission Due");
+                                UpdateStatus("----------------------------------------------------------------------------------------");
 
                                 salesDueTotal += salesPersonDue;
                                 invoiceTotal += clientClaim.CheckAmount;
                                 line++; 
                             }
                         }
-                    } 
+                    }
+
+                    UpdateStatus(salesperson.Name + " will receive " + String.Format("{0:c}", salesDueTotal)); 
                 }
+
+                UpdateStatus(" ");
+                UpdateStatus(" ");
+                UpdateStatus(" ");
             }
         }
 
@@ -197,9 +224,18 @@ namespace TranSubroCommissions
             if(fileNumberSplit.Length > 1)
             {
                 string dateString = fileNumberSplit[1];
+                DateTime date = DateTime.MaxValue;
 
-                DateTime date = DateTime.ParseExact(dateString, "MMddyy", CultureInfo.InvariantCulture);
-                 
+                try
+                {
+                    date = DateTime.ParseExact(dateString, "MMddyy", CultureInfo.InvariantCulture);
+
+                }
+                catch
+                {
+                    throw new FormatException("The date portion of the claim item was formatted incorrectly, should be MMddyy, but instead was " + dateString + " in item " + fileNumber);
+                }
+
                 if (date < client.ThresholdDate)
                     commission = client.ClientPercentageOld;
             }
@@ -212,7 +248,19 @@ namespace TranSubroCommissions
             DateTime? startDate = StartDate.SelectedDate;
             DateTime? endDate = EndDate.SelectedDate;
 
-            await Task.Run(() => ProcessInvoices(startDate, endDate));
+            await Task.Run(() => { 
+                try
+                {
+                    ProcessInvoices(startDate, endDate);
+                }
+                catch(Exception ex)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show(ex.Message, "Failed to process invoices", MessageBoxButton.OK, MessageBoxImage.Error); 
+                    });
+                }
+            });
         }
     }
 }
