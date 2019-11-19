@@ -22,29 +22,37 @@ namespace TranSubroCommissions
     /// Interaction logic for AddClaims.xaml
     /// </summary>
     public partial class AddClaims : InjectableUserControl
-    {
-        [Inject]
-        public IClientService clients { private get; set; }
+    { 
         public List<CheckDeposit> claims = new List<CheckDeposit>() { new CheckDeposit() };
 
-        public List<string> InsuranceCompanies { get; set; }
+        public static List<string> InsuranceCompanies { get; set; }
         public AddClaims()
         {
             InitializeComponent();
-            var qbService = new QuickbooksService();
-            InsuranceCompanies = qbService.GetInsuranceCompanies();
-
-
+              
             this.DataContext = this;
-            this.Loaded += delegate
-            {
-                //clientDropdown.ItemsSource = clients.GetAllClients();
-                ClaimChecks.ItemsSource = claims;
+            ClaimChecks.ItemsSource = claims;
 
-                
+            if(InsuranceCompanies == null)
+                InsuranceCompanies = new List<string>() { "CONNECTING TO QUICKBOOKS... " };
+
+            this.Loaded += delegate
+            { 
+                if(InsuranceCompanies.Count == 1) { 
+                    Task.Run(() => {
+                        var qbService = new QuickbooksService();
+                        InsuranceCompanies = qbService.GetInsuranceCompanies();
+
+                        ClaimChecks.Dispatcher.Invoke(() => {
+                            ClaimChecks.ItemsSource = claims;
+                            ClaimChecks.Items.Refresh(); 
+                        }); 
+                    });
+                }
             };
         }
 
+       
         private void AddCheckButton_Click(object sender, RoutedEventArgs e)
         {
             claims.Add(new CheckDeposit());

@@ -54,11 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISalespersonService.cs" />
-    <Compile Include="IClientService.cs" />
     <Compile Include="QuickbooksService.cs" />
-    <Compile Include="TestSalespersonService.cs" />
-    <Compile Include="TestClientService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

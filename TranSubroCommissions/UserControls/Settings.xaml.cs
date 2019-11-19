@@ -1,5 +1,4 @@
-﻿using Ninject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,25 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Transubro.CMS.API;
-using Transubro.CMS.Model;
 
 namespace TranSubroCommissions
 {
     /// <summary>
-    /// Interaction logic for ClientList.xaml
+    /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class SalespersonList : InjectableUserControl
-    { 
-        public SalespersonList( )
-        { 
+    public partial class Settings : InjectableUserControl
+    {
+        public Settings()
+        {
             InitializeComponent();
-            this.Loaded += delegate
-            {
-                SalespersonsList.ItemsSource =  new QuickbooksService().SearchEmployees("{salesperson}");
-            };
         }
-
-        
     }
 }

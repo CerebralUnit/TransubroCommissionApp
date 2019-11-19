@@ -22,9 +22,7 @@ namespace TranSubroCommissions
     /// Interaction logic for NewClientScreen.xaml
     /// </summary>
     public partial class NewClientScreen : InjectableUserControl
-    {
-        [Inject]
-        public ISalespersonService sales { private get; set; }
+    { 
         public List<SalesCommission> commissions = new List<SalesCommission>()
         {
                  new SalesCommission()
@@ -37,7 +35,12 @@ namespace TranSubroCommissions
         public NewClientScreen()
         {
             InitializeComponent();
-            SalesPersons = sales.GetAllSalesPersons();
+            var employees = new QuickbooksService().SearchEmployees("{salesperson}");
+            SalesPersons = employees.ConvertAll(x => new SalesPerson()
+            {
+                Id = x.ListID,
+                Name = x.Name
+            });
             CommissionsList.ItemsSource = commissions;
             this.DataContext = this; 
         }

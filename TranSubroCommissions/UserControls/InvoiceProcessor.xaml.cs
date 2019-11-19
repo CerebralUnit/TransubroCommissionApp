@@ -36,16 +36,19 @@ namespace TranSubroCommissions
                 StatusBlock.Text += Message;
             });
         }
-
+        private void ResetStatus()
+        {
+            StatusBlock.Dispatcher.Invoke(() => {
+                StatusBlock.Text = String.Empty; 
+            });
+        }
         private void ProcessInvoices(DateTime? startDate, DateTime? endDate)
         {
+            ResetStatus();
             //Get all deposits in date range
             //Get all items that match the file numbers in the deposits
             //Get all of the clients based on the items
             //Get all of the salespeople for the clients
-           
-
-            
 
             if (startDate.HasValue && endDate.HasValue)
             {
@@ -87,6 +90,7 @@ namespace TranSubroCommissions
                 Dictionary<string, PayrollWageItem> commissionItems = qb.GetActivePayrollItemsWage().Where(x => x.WageType == "Commission").ToDictionary(x => x.Name, x => x);
  
                 UpdateStatus("Building client invoices");
+
                 foreach (var client in clients)
                 { 
                     if (!claimsByClient.ContainsKey(client.Key))
@@ -166,6 +170,7 @@ namespace TranSubroCommissions
                 }
             }
         }
+
         private decimal GetCompanyPercentForCheck(string fileNumber, Client client)
         {
             string[] fileNumberSplit = fileNumber.Split('-');
@@ -183,6 +188,7 @@ namespace TranSubroCommissions
 
             return commission;
         }
+
         private decimal GetClientPercentForCheck(string fileNumber, Client client)
         {
             string[] fileNumberSplit = fileNumber.Split('-');

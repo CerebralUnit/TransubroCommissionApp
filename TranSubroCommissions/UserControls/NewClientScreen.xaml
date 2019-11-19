@@ -12,8 +12,7 @@
             <ColumnDefinition Width="*"  />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
-
+        <StackPanel Grid.Column="0" HorizontalAlignment="Stretch"> 
             <TextBlock FontSize="24" Text="New Client" ></TextBlock>
             <StackPanel Orientation="Horizontal"> 
                 <TextBox  m:HintAssist.IsFloating="True" m:HintAssist.Hint="Client ID" HorizontalAlignment="Left" Margin="0 5 15 0"   Width="180" /> 

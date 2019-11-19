@@ -24,5 +24,21 @@ namespace TranSubroCommissions
         {
             InitializeComponent();
         }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Visible;
+            SettingsButtons.Visibility = Visibility.Visible;
+        }
+        private void CloseSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Hidden;
+            SettingsButtons.Visibility = Visibility.Hidden;
+        }
+        private void SaveSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsButtons.Visibility = Visibility.Hidden;
+            SettingsPanel.Visibility = Visibility.Hidden;
+        }
     }
 }

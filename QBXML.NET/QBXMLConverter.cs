@@ -13,17 +13,17 @@ namespace QBXML.NET
 {
     public class QBXMLConverter
     {
-        private const string ItemServiceAddTemplate = @"XMLTemplates\ItemServiceAddRequest.xml";
-        private const string ItemQueryDateRangeTemplate = @"XMLTemplates\ItemQueryByDateRange.xml";
+        private const string ItemServiceAddTemplate           = @"XMLTemplates\ItemServiceAddRequest.xml";
+        private const string ItemQueryDateRangeTemplate       = @"XMLTemplates\ItemQueryByDateRange.xml";
         private const string ItemQueryDateRangePrefixTemplate = @"XMLTemplates\ItemQueryByDateRangeAndPrefix.xml";
-        private const string EnvelopeTemplate = @"XMLTemplates\QBXMLEnvelope.xml";
-        private const string VendorQueryTypeTemplate = @"XMLTemplates\VendorQueryByType.xml";
-        private const string DepositTemplate = @"XMLTemplates\Deposit.xml";
-        private const string DepositQueryTemplate = @"XMLTemplates\DepositQuery.xml";
-        private const string PayrollItemQueryTemplate = @"XMLTemplates\PayrollItemQuery.xml";
-        private const string EmployeeQueryTemplate = @"XMLTemplates\EmployeeQueryByName.xml"; 
-        private const string CustomerQueryTemplate = @"XMLTemplates\CustomerQuery.xml";
-        private const string ItemPrefixFilterTemplate = @"XMLTemplates\ItemQueryPrefixFilter.xml";
+        private const string EnvelopeTemplate                 = @"XMLTemplates\QBXMLEnvelope.xml";
+        private const string VendorQueryTypeTemplate          = @"XMLTemplates\VendorQueryByType.xml";
+        private const string DepositTemplate                  = @"XMLTemplates\Deposit.xml";
+        private const string DepositQueryTemplate             = @"XMLTemplates\DepositQuery.xml";
+        private const string PayrollItemQueryTemplate         = @"XMLTemplates\PayrollItemQuery.xml";
+        private const string EmployeeQueryTemplate            = @"XMLTemplates\EmployeeQueryByName.xml"; 
+        private const string CustomerQueryTemplate            = @"XMLTemplates\CustomerQuery.xml";
+        private const string ItemPrefixFilterTemplate         = @"XMLTemplates\ItemQueryPrefixFilter.xml";
         
 
 

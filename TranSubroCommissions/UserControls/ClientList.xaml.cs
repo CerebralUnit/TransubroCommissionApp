@@ -28,9 +28,7 @@ namespace TranSubroCommissions
         private string _filterString = "";
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        [Inject]
-        public IClientService clients { private get; set; }
+ 
         private List<Client> allClients { get; set; }
         public string FilterString
         {
@@ -62,7 +60,7 @@ namespace TranSubroCommissions
             
             this.Loaded += delegate
             {
-                allClients = clients.GetAllClients();
+                allClients = new QuickbooksService().GetClients();
                 DataGridCollection = CollectionViewSource.GetDefaultView(allClients);
                 DataGridCollection.Filter = new Predicate<object>(Filter);
                 ClientsList.ItemsSource = DataGridCollection;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Interop.QBXMLRP2;
@@ -11,26 +12,60 @@ namespace QBXML.NET
     public class QuickbooksClient
     {
         private string appName;
+        private const string companyFile = @"C:\Users\Public\Documents\Intuit\Quickbooks\Company Files\Test.qbw";
+
+        protected static RequestProcessor2 MyQbXMLRP2;
+        private static string ticket = null;
+
+        public QuickbooksClient() { }
+
         public QuickbooksClient(string applicationName)
         {
             appName = applicationName;
+
+            if(MyQbXMLRP2 == null)
+            {
+                MyQbXMLRP2 = new RequestProcessor2(); 
+                MyQbXMLRP2.OpenConnection2("", appName, QBXMLRPConnectionType.localQBD); 
+            }
+            
+            if(ticket == null)
+            {
+                try
+                { 
+                    ticket = MyQbXMLRP2.BeginSession(companyFile, QBFileMode.qbFileOpenDoNotCare); 
+                }
+                catch (COMException ex)
+                {
+                    throw ex;
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
         }
 
+        public void Disconnect()
+        {
+            if (ticket != null && MyQbXMLRP2 != null) 
+                MyQbXMLRP2.EndSession(ticket);  
+
+            if(MyQbXMLRP2 != null)
+                MyQbXMLRP2.CloseConnection();
+
+            MyQbXMLRP2 = null;
+            ticket = null;
+        }
 
         public string ProcessRequest(string xml)
-        {
-            RequestProcessor2 MyQbXMLRP2 = new RequestProcessor2();
-
-            MyQbXMLRP2.OpenConnection2("", appName, QBXMLRPConnectionType.localQBD);
-
-            string ticket = MyQbXMLRP2.BeginSession("", QBFileMode.qbFileOpenDoNotCare);
-
+        {  
             // The variable “xmlRequestSet” in the following line represents a fully formed qbXML request set;
             //This snippet omitted the code that assembled the request set in order to keep the
             //example focused on the session and the connection.   
             string sendXMLtoQB = MyQbXMLRP2.ProcessRequest(ticket, xml);
 
-            MyQbXMLRP2.CloseConnection();
+           
 
             return sendXMLtoQB;
         }

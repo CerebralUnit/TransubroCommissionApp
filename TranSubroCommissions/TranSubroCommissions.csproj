@@ -88,6 +88,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Splashscreen.xaml.cs">
+      <DependentUpon>Splashscreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Splashscreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\AddClaims.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,12 +134,16 @@
     <Compile Include="UserControls\ClientList.xaml.cs">
       <DependentUpon>ClientList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InjectableUserControl.cs" />
+    <Compile Include="BaseClasses\InjectableUserControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\NewClientScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,17 +187,10 @@
       <Project>{e1a95476-bb78-42d5-975d-b451ee789eba}</Project>
       <Name>Transubro.CMS.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Transubro.CMS.Integrations\Transubro.CMS.Integrations.csproj">
-      <Project>{1bd96d06-da49-44e6-a280-e4891b794a7a}</Project>
-      <Name>Transubro.CMS.Integrations</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Transubro.CMS.Model\Transubro.CMS.Model.csproj">
       <Project>{17B9EF23-D7A0-4B14-BAD9-CA5DF5F1469E}</Project>
       <Name>Transubro.CMS.Model</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="calc-icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
@@ -196,21 +203,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="transcalc.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="calc.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="commision-icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="tc-icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="tc.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="tsc.ico" />

@@ -11,7 +11,24 @@
     <Window.Resources>
        
     </Window.Resources>
-    <Grid Background="#01FFFFFF" Margin="0"> 
+    <Grid Background="#01FFFFFF" Margin="0">
+        <Button Name="SettingsButton" Click="SettingsButton_Click" Height="40" m:ShadowAssist.ShadowDepth="Depth0" Panel.ZIndex="5" VerticalAlignment="Top" HorizontalAlignment="Right" >
+            <Button.Content>
+                <m:PackIcon Kind="Settings"></m:PackIcon>
+            </Button.Content>
+        </Button>
+        <StackPanel Name="SettingsButtons" Visibility="Hidden" Margin="15" Orientation="Horizontal" Panel.ZIndex="7" HorizontalAlignment="Right">
+            <Button Name="CloseSettingsButton" BorderBrush="#000" Background="Transparent" BorderThickness="1" Foreground="#000" Click="CloseSettingsButton_Click" Height="40" m:ShadowAssist.ShadowDepth="Depth0" Panel.ZIndex="7" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
+                <Button.Content>
+                    <TextBlock Text="Cancel" />
+                </Button.Content>
+            </Button>
+            <Button Margin="15 0 0 0" Name="SaveSettingsButton" Click="SaveSettingsButton_Click" Height="40" m:ShadowAssist.ShadowDepth="Depth0" Panel.ZIndex="7" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
+                <Button.Content>
+                    <TextBlock Text="Save" />
+                </Button.Content>
+            </Button>
+        </StackPanel>
         <Border Padding="0"> 
             <dragablz:TabablzControl Background="#ffffff"   BorderThickness="0" >
                 <TabItem Header="Generate Invoices">
@@ -24,7 +41,7 @@
                         <local:AddClaims></local:AddClaims>
                     </Border>
                 </TabItem>
-                
+               
                 <!--<TabItem Header="New Client" > 
                     <Border Padding="15">
                         <local:NewClientScreen></local:NewClientScreen>
@@ -42,6 +59,9 @@
                     </Border>
                 </TabItem>-->
             </dragablz:TabablzControl>  
+        </Border>
+        <Border Name="SettingsPanel" Background="#FFF" Panel.ZIndex="6" Visibility="Hidden">
+            <local:Settings></local:Settings>
         </Border>
     </Grid>
 </Window>
