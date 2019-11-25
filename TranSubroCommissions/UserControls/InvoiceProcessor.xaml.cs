@@ -25,23 +25,123 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class InvoiceProcessor : InjectableUserControl
     {
+        public enum UpdateType
+        {
+            Text,
+            Alert,
+            Title
+        }
         public InvoiceProcessor()
         {
             InitializeComponent();
         }
-        private void UpdateStatus(string Message)
+        private void UpdateStatus(string Message, UpdateType type = UpdateType.Text)
         {
             StatusBlock.Dispatcher.Invoke(() => {
                 StatusBlock.Text += "\n";
-                StatusBlock.Text += Message;
+                StatusBlock.Text += Message; 
             });
+              
+            invoices.Dispatcher.Invoke(() => {
+
+                var text = new TextBlock() { Text = Message };
+
+                if (type == UpdateType.Alert)
+                {
+                    text.Background = Brushes.LightCyan;
+                    text.Padding = new Thickness(5);
+                    text.Margin = new Thickness(0, 0, 0, 10);
+                    text.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    text.TextAlignment = TextAlignment.Left;
+                    text.FontWeight = FontWeights.Bold;
+                   
+                }
+                else if(type == UpdateType.Title)
+                {
+                    text.FontSize = 18;
+                    text.Margin = new Thickness(0, 15, 0, 10);
+                    text.FontWeight = FontWeights.Bold;
+                }
+                 
+                invoices.Children.Add(text);
+            }); 
         }
         private void ResetStatus()
         {
             StatusBlock.Dispatcher.Invoke(() => {
-                StatusBlock.Text = String.Empty; 
+                StatusBlock.Text = String.Empty;
             });
         }
+        private void Grid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent?.RaiseEvent(eventArg);
+            }
+        }
+        public class InvoiceLine
+        {
+            public string LineNumber { get; set; }
+            public string FileNumber { get; set; }
+            public string Description { get; set; }
+            public string CheckAmount { get; set; }
+            public string AmountDue { get; set; }
+        }
+        private DataGrid GetInvoiceGrid(string recipientType)
+        {
+            Style s = new Style();
+            s.Setters.Add(new Setter(DataGridCell.HorizontalAlignmentProperty, HorizontalAlignment.Right));
+            s.Setters.Add(new Setter(DataGridCell.BorderThicknessProperty, new Thickness(0)));
+            s.Setters.Add(new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent));
+
+
+            var grid = new DataGrid();
+            grid.PreviewMouseWheel += Grid_PreviewMouseWheel;
+            grid.IsReadOnly = true;
+            grid.AutoGenerateColumns = false;
+
+            DataGridTextColumn textColumn = new DataGridTextColumn();
+            textColumn.Header = "#";
+            
+            textColumn.Binding = new Binding("LineNumber");
+            textColumn.Width = 50;
+
+            DataGridTextColumn fileNoColumn = new DataGridTextColumn();
+            fileNoColumn.Header = "File #";
+            fileNoColumn.Binding = new Binding("FileNumber");
+            fileNoColumn.MinWidth = 200;
+
+            DataGridTextColumn descColumn = new DataGridTextColumn();
+            descColumn.Header = "Description";
+            descColumn.Binding = new Binding("Description");
+            descColumn.MinWidth = 300;
+            DataGridTextColumn checkAmtColumn = new DataGridTextColumn();
+            checkAmtColumn.Header = "Check Amt";
+            checkAmtColumn.Binding = new Binding("CheckAmount");
+            checkAmtColumn.HeaderStyle = s;
+            checkAmtColumn.CellStyle = s;
+            checkAmtColumn.MinWidth = 150;
+            DataGridTextColumn dueColumn = new DataGridTextColumn();
+            dueColumn.Header = "Due " + recipientType;
+            dueColumn.Binding = new Binding("AmountDue");
+            dueColumn.HeaderStyle = s;
+            dueColumn.CellStyle = s;
+            dueColumn.MinWidth = 150;
+            grid.Columns.Add(textColumn);
+            grid.Columns.Add(fileNoColumn);
+            grid.Columns.Add(descColumn);
+            grid.Columns.Add(checkAmtColumn);
+            grid.Columns.Add(dueColumn);
+
+
+            return grid;
+        }
+
         private void ProcessInvoices(DateTime? startDate, DateTime? endDate)
         {
             ResetStatus();
@@ -55,8 +155,8 @@ namespace TranSubroCommissions
                 var qbc = new QuickbooksClient(QuickbooksService.AppName);
                 var qb = new QuickbooksService();
 
-                UpdateStatus("Getting deposits from between dates");
-                UpdateStatus(" ");
+                UpdateStatus("Gathering deposits for " + startDate.Value.ToString("MM/dd/yy") + " to " + endDate.Value.ToString("MM/dd/yy"), UpdateType.Alert);
+          
                 List<QuickbooksDeposit> deposits = qb.GetDepositsByDateRange(startDate.Value, endDate.Value);
 
                 Dictionary<string, List<QuickbooksDeposit>> depositsByClient = deposits
@@ -66,8 +166,8 @@ namespace TranSubroCommissions
                     .ToDictionary(x => x.Key, x => x.ToList());
 
 
-                UpdateStatus("Gathering clients");
-                UpdateStatus(" ");
+                UpdateStatus("Gathering clients", UpdateType.Alert);
+                
                 List<string> clientNames = deposits.Select(x => x.Memo.Substring(0, x.Memo.IndexOf("-"))).Distinct().ToList();
 
                 Dictionary<string, Client> clients = qb.GetClients().Where(x => clientNames.Contains(x.Name)).ToDictionary(x => x.Name, x => x);
@@ -76,8 +176,7 @@ namespace TranSubroCommissions
                 List<string> fileNumbers = deposits.Select(x => x.Memo.Substring(0, x.Memo.IndexOf(" "))).Distinct().ToList();
 
 
-                UpdateStatus("Retrieving items to create invoice lines");
-                UpdateStatus(" ");
+                UpdateStatus("Retrieving items to create invoice lines", UpdateType.Alert); 
                 List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
 
                 Dictionary<string, List<Claim>> claimsByClient = claims
@@ -87,40 +186,42 @@ namespace TranSubroCommissions
                     .ToDictionary(x => x.Key, x => x.ToList());
 
 
-                UpdateStatus("Retrieving salesperson commission list");
-                UpdateStatus(" ");
+                UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
                 List<Employee> salespersons = qbc.SearchEmployeesByName("{salesperson}");
 
                 Dictionary<string, PayrollWageItem> commissionItems = qb.GetActivePayrollItemsWage().Where(x => x.WageType == "Commission").ToDictionary(x => x.Name, x => x);
  
-                UpdateStatus("Building client invoices");
-                UpdateStatus(" ");
+                UpdateStatus("Building client invoices", UpdateType.Alert); 
                 foreach (var client in clients)
-                { 
+                {
+                    DataGrid datagrid = null;
+                    var invoiceLines = new List<InvoiceLine>();
+                   
                     if (!claimsByClient.ContainsKey(client.Key))
                     {
-                        UpdateStatus("No deposits were found for " + client.Key);
-                        UpdateStatus(" ");
+                        UpdateStatus("No deposits were found for " + client.Key, UpdateType.Alert); 
                         continue;
                     }
                     else
-                    {
-                        UpdateStatus(" ");
-                        UpdateStatus(" ");
-                        UpdateStatus(" ");
-                        UpdateStatus("_______________________________________________________________________");
-                        UpdateStatus("Building client invoice for " + client.Key + "");
+                    { 
+                        UpdateStatus("Client Invoice for " + client.Key + "", UpdateType.Title); 
                     }
+
+
+
+                    invoices.Dispatcher.Invoke(() => {
+                        datagrid = GetInvoiceGrid("Client");
+                        invoices.Children.Add(datagrid);
+                        datagrid.ItemsSource = invoiceLines;
+                    });
+
 
                     var invoice = new ClientInvoice()
                     {
                         Client = client.Key,
                         Claims = claimsByClient[client.Key]
                     };
-
-                    UpdateStatus("");
-                    UpdateStatus("Invoice Lines");
-
+                     
                     int line = 1;
                     decimal invoiceTotal = 0;
                     decimal clientDueTotal = 0;
@@ -129,45 +230,68 @@ namespace TranSubroCommissions
                     {
                         decimal clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
                         decimal dueClient = clientPercent * claim.CheckAmount;
-                        UpdateStatus("----------------------------------------------------------------------------------------");
-                        UpdateStatus(line + ". " + claim.FileNumber + "....." + claim.Description + "....." + claim.CheckAmount.ToString("c") + "....." + dueClient.ToString("c") + " Due Client");
-
+                        
+                        invoiceLines.Add(new InvoiceLine()
+                        {
+                            LineNumber = line.ToString(),
+                            FileNumber = claim.FileNumber,
+                            Description = claim.Description,
+                            CheckAmount = claim.CheckAmount.ToString("c"),
+                            AmountDue = dueClient.ToString("c")
+                        });
+ 
                         clientDueTotal += dueClient;
                         invoiceTotal += claim.CheckAmount;
                         line++;
                     }
-
+                     
                     string items = invoice.Claims.Count > 1 ? "items" : "item";
-                    UpdateStatus("----------------------------------------------------------------------------------------");
-                    UpdateStatus("Total: " + invoiceTotal.ToString("c"));
-                    UpdateStatus("Client Due: " + clientDueTotal.ToString("c"));
-                    UpdateStatus("Invoice complete");
-                    //Build client invoice
+                    invoiceLines.Add(new InvoiceLine()
+                    {
+                        LineNumber = "",
+                        FileNumber = "",
+                        Description = "",
+                        CheckAmount = "",
+                        AmountDue = ""
+                    });
+                   
+                    invoiceLines.Add(new InvoiceLine()
+                    {
+                        LineNumber = "",
+                        FileNumber = "",
+                        Description = "",
+                        CheckAmount = "Total Client Due",
+                        AmountDue = clientDueTotal.ToString("c")
+                    });
+
+                    datagrid.Dispatcher.Invoke(() => {
+                        datagrid.Items.Refresh();
+                    });
+                  
                     UpdateStatus(" ");
-                    UpdateStatus(" ");
-                    UpdateStatus(" ");
-                }
-                UpdateStatus(" ");
-                UpdateStatus("Client invoices complete.");
-                UpdateStatus(" ");
-                UpdateStatus("Building salesperson invoices");
-                UpdateStatus(" ");
+                } 
+                UpdateStatus("Client invoices complete.", UpdateType.Alert); 
+                UpdateStatus("Building salesperson invoices", UpdateType.Alert); 
                 foreach (var salesperson in salespersons)
                 {
-                    UpdateStatus(" ");
-                    UpdateStatus(" ");
-                    UpdateStatus(" ");
-
+                    DataGrid datagrid = null;
+                    var invoiceLines = new List<InvoiceLine>();
+                    
                     int line = 1;
-
-                    UpdateStatus("_______________________________________________________________________"); 
-                    UpdateStatus("Building sales commission invoice for " + salesperson.Name);
-                    UpdateStatus("----------------------------------------------------------------------------------------");
-
+ 
+                    UpdateStatus("Commission invoice for " + salesperson.Name, UpdateType.Title);
+                     
                     decimal invoiceTotal = 0;
                     decimal salesDueTotal = 0;
 
-                    foreach(var commission in salesperson.Earnings)
+                    invoices.Dispatcher.Invoke(() => {
+                        datagrid = GetInvoiceGrid("Salesperson");
+                        invoices.Children.Add(datagrid);
+                        datagrid.ItemsSource = invoiceLines;
+                    });
+
+                     
+                    foreach (var commission in salesperson.Earnings)
                     {
                         if(claimsByClient.ContainsKey(commission.FullName))
                         {
@@ -178,23 +302,39 @@ namespace TranSubroCommissions
                                 decimal companyPercent = GetCompanyPercentForCheck(clientClaim.FileNumber, clients[commission.FullName]);
                                 decimal companyAmount = companyPercent * clientClaim.CheckAmount;
                                 decimal salesPersonDue = (commission.Amount/100) * companyAmount;
-                                
-                                UpdateStatus(line + ". " + clientClaim.FileNumber + "....." + clientClaim.Description + "....." + clientClaim.CheckAmount.ToString("c") + "....." + salesPersonDue.ToString("c") + " Commission Due");
-                                UpdateStatus("----------------------------------------------------------------------------------------");
 
+                                invoiceLines.Add(new InvoiceLine()
+                                {
+                                    LineNumber = line.ToString(),
+                                    FileNumber = clientClaim.FileNumber,
+                                    Description = clientClaim.Description,
+                                    CheckAmount = clientClaim.CheckAmount.ToString("c"),
+                                    AmountDue = salesPersonDue.ToString("c")
+                                });
+ 
                                 salesDueTotal += salesPersonDue;
                                 invoiceTotal += clientClaim.CheckAmount;
                                 line++; 
                             }
                         }
                     }
-
-                    UpdateStatus(salesperson.Name + " will receive " + String.Format("{0:c}", salesDueTotal)); 
-                }
-
-                UpdateStatus(" ");
-                UpdateStatus(" ");
-                UpdateStatus(" ");
+                    invoiceLines.Add(new InvoiceLine()
+                    {
+                        LineNumber = "",
+                        FileNumber = "",
+                        Description = "",
+                        CheckAmount = "",
+                        AmountDue = ""
+                    });
+                    invoiceLines.Add(new InvoiceLine()
+                    {
+                        LineNumber = "",
+                        FileNumber = "",
+                        Description = "",
+                        CheckAmount = "Total Commissions",
+                        AmountDue = salesDueTotal.ToString("c")
+                    }); 
+                } 
             }
         }
 
