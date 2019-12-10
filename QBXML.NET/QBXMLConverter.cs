@@ -166,7 +166,15 @@ namespace QBXML.NET
                 xml = template;
             }
 
-            return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
+            var envelope = GetTemplateText(EnvelopeTemplate);
+            string response = null;
+
+            if(envelope != null)
+            {
+                response = envelope.Replace("{{Requests}}", xml);
+            }
+
+            return response;
         }
 
         public List<Customer> DeserializeCustomerQueryResponse(string xml)

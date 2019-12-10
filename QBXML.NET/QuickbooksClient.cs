@@ -88,10 +88,14 @@ namespace QBXML.NET
             var converter = new QBXMLConverter();
 
             string xml = converter.GetCustomersQuery();
-            string responseXml = ProcessRequest(xml);
+            List<Customer> customers = null;
 
-            List<Customer> customers = converter.DeserializeCustomerQueryResponse(responseXml);
-
+            if (xml != null)
+            {
+                string responseXml = ProcessRequest(xml);
+                customers = converter.DeserializeCustomerQueryResponse(responseXml);
+            }
+           
             return customers;
         }
         public List<Employee> SearchEmployeesByName(string name)

@@ -1,6 +1,7 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,8 @@ namespace TranSubroCommissions
                         try
                         {
                             var qbService = new QuickbooksService();
-                            InsuranceCompanies = qbService.GetInsuranceCompanies();
+ 
+                            InsuranceCompanies = qbService.GetInsuranceCompanies(); 
 
                             ClaimChecks.Dispatcher.Invoke(() => {
                                 ClaimChecks.ItemsSource = claims;
@@ -52,10 +54,15 @@ namespace TranSubroCommissions
                         }
                         catch(Exception ex)
                         {
+                            var st = new StackTrace(ex, true);
+                            // Get the top stack frame
+                            var frame = st.GetFrame(0);
+                            // Get the line number from the stack frame
+                            var line = frame.GetFileLineNumber();
                             this.Dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show("There was an error when trying to retrieve insurance companies: " + ex.Message,
-                                 "Quickbooks Connection Error",
+                                MessageBox.Show("There was an error when trying to retrieve insurance companies: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
+                                 "Quickbooks Error",
                                  MessageBoxButton.OK,
                                 MessageBoxImage.Error);
                             });

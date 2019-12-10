@@ -48,7 +48,7 @@ namespace Transubro.CMS.API
 
             List<Customer> customers = qbc.GetActiveCustomers();
 
-            return customers.Where(x => x.CustomerType == "Insurance Company").Select(x => x.FullName).ToList();
+            return customers?.Where(x => x.CustomerType == "Insurance Company").Select(x => x.FullName).ToList();
         }
 
         public List<Claim> SearchClaims(List<string> fileNumbers, DateTime startDate, DateTime endDate)
