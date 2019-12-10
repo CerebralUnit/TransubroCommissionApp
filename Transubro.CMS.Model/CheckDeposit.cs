@@ -43,21 +43,21 @@ namespace Transubro.CMS.Model
 
         public string LossOfUseDescription { get; set; }
          
-        public decimal LossOfUseAmount { get; set; }
+        public decimal? LossOfUseAmount { get; set; }
 
         public string PropertyDamageDescription { get; set; }
 
-        public decimal PropertyDamageAmount { get; set; }
+        public decimal? PropertyDamageAmount { get; set; }
 
         public string OtherDescription { get; set; }
 
-        public decimal OtherAmount { get; set; }
+        public decimal? OtherAmount { get; set; }
 
         [QuickbooksField("Amount")]
         public decimal CheckAmount {
             get
             {
-                return LossOfUseAmount + PropertyDamageAmount + OtherAmount;
+                return LossOfUseAmount.Value + PropertyDamageAmount.Value + OtherAmount.Value;
             }
         }
     }

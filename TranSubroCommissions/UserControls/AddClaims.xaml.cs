@@ -39,14 +39,27 @@ namespace TranSubroCommissions
             this.Loaded += delegate
             { 
                 if(InsuranceCompanies.Count == 1) { 
-                    Task.Run(() => {
-                        var qbService = new QuickbooksService();
-                        InsuranceCompanies = qbService.GetInsuranceCompanies();
+                    Task.Run(() => { 
+                        try
+                        {
+                            var qbService = new QuickbooksService();
+                            InsuranceCompanies = qbService.GetInsuranceCompanies();
 
-                        ClaimChecks.Dispatcher.Invoke(() => {
-                            ClaimChecks.ItemsSource = claims;
-                            ClaimChecks.Items.Refresh(); 
-                        }); 
+                            ClaimChecks.Dispatcher.Invoke(() => {
+                                ClaimChecks.ItemsSource = claims;
+                                ClaimChecks.Items.Refresh();
+                            });
+                        }
+                        catch(Exception ex)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                MessageBox.Show("There was an error when trying to retrieve insurance companies: " + ex.Message,
+                                 "Quickbooks Connection Error",
+                                 MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+                            });
+                        } 
                     });
                 }
             };
@@ -173,6 +186,48 @@ namespace TranSubroCommissions
         private void PDDesc_LostFocus(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void currency_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            TextBox txtBox = sender as TextBox;
+            int decimalIndex = txtBox.Text.IndexOf(".");
+
+            if (e.Key == Key.OemPeriod || e.Key == Key.Decimal)
+            {
+                if (decimalIndex > -1)
+                {
+                    e.Handled = true;
+                    txtBox.CaretIndex = decimalIndex + 1;
+                    return;
+                }
+            }
+            else if (e.Key == Key.Back)
+            {
+                if (decimalIndex > -1 && txtBox.CaretIndex == decimalIndex + 1)
+                {
+                    e.Handled = true;
+                    txtBox.CaretIndex = decimalIndex;
+                    return;
+                }
+            }
+            
+        }
+
+        private void currency_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            TextBox txtBox = sender as TextBox;
+            int decimalIndex = txtBox.Text.IndexOf(".");
+
+            if (txtBox.Text == "$0.00" && txtBox.CaretIndex == 1)
+            {
+                string val = e.Text;
+
+                txtBox.Text = String.Format("${0}.00", val);
+                txtBox.CaretIndex = 2;
+                e.Handled = true;
+                return;
+            }
         }
     }
 }

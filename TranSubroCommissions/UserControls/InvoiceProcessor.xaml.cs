@@ -161,37 +161,43 @@ namespace TranSubroCommissions
 
                 Dictionary<string, List<QuickbooksDeposit>> depositsByClient = deposits
                     .GroupBy(x =>
-                        x.Memo.Substring(0, x.Memo.IndexOf("-"))
+                       x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo
                     )
                     .ToDictionary(x => x.Key, x => x.ToList());
-
-
+                 
                 UpdateStatus("Gathering clients", UpdateType.Alert);
-                
-                List<string> clientNames = deposits.Select(x => x.Memo.Substring(0, x.Memo.IndexOf("-"))).Distinct().ToList();
+
+                List<string> clientNames = deposits.Select(x =>
+                    x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo
+                ).Distinct().ToList();
 
                 Dictionary<string, Client> clients = qb.GetClients().Where(x => clientNames.Contains(x.Name)).ToDictionary(x => x.Name, x => x);
 
 
-                List<string> fileNumbers = deposits.Select(x => x.Memo.Substring(0, x.Memo.IndexOf(" "))).Distinct().ToList();
-
-
+                List<string> fileNumbers = deposits.Select(x =>
+                   x.Memo.IndexOf(" ") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf(" ")) : x.Memo
+                 )
+                .Distinct()
+                .ToList();
+                 
                 UpdateStatus("Retrieving items to create invoice lines", UpdateType.Alert); 
+
                 List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
 
                 Dictionary<string, List<Claim>> claimsByClient = claims
                     .GroupBy(x =>
-                        x.FileNumber.Substring(0, x.FileNumber.IndexOf("-"))
+                        x.FileNumber.IndexOf("-") > -1 ? x.FileNumber.Substring(0, x.FileNumber.IndexOf("-")) : x.FileNumber
                     )
                     .ToDictionary(x => x.Key, x => x.ToList());
-
-
+                 
                 UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
+
                 List<Employee> salespersons = qbc.SearchEmployeesByName("{salesperson}");
 
                 Dictionary<string, PayrollWageItem> commissionItems = qb.GetActivePayrollItemsWage().Where(x => x.WageType == "Commission").ToDictionary(x => x.Name, x => x);
  
                 UpdateStatus("Building client invoices", UpdateType.Alert); 
+
                 foreach (var client in clients)
                 {
                     DataGrid datagrid = null;
@@ -206,16 +212,13 @@ namespace TranSubroCommissions
                     { 
                         UpdateStatus("Client Invoice for " + client.Key + "", UpdateType.Title); 
                     }
-
-
-
+                     
                     invoices.Dispatcher.Invoke(() => {
                         datagrid = GetInvoiceGrid("Client");
                         invoices.Children.Add(datagrid);
                         datagrid.ItemsSource = invoiceLines;
                     });
-
-
+                     
                     var invoice = new ClientInvoice()
                     {
                         Client = client.Key,
@@ -246,6 +249,7 @@ namespace TranSubroCommissions
                     }
                      
                     string items = invoice.Claims.Count > 1 ? "items" : "item";
+
                     invoiceLines.Add(new InvoiceLine()
                     {
                         LineNumber = "",
@@ -270,8 +274,10 @@ namespace TranSubroCommissions
                   
                     UpdateStatus(" ");
                 } 
+
                 UpdateStatus("Client invoices complete.", UpdateType.Alert); 
                 UpdateStatus("Building salesperson invoices", UpdateType.Alert); 
+
                 foreach (var salesperson in salespersons)
                 {
                     DataGrid datagrid = null;

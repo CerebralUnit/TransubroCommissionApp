@@ -12,7 +12,7 @@ namespace QBXML.NET
     public class QuickbooksClient
     {
         private string appName;
-        private const string companyFile = @"C:\Users\Public\Documents\Intuit\Quickbooks\Company Files\Test.qbw";
+        private const string companyFile = @"C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubro, inc..qbw";
 
         protected static RequestProcessor2 MyQbXMLRP2;
         private static string ticket = null;
@@ -41,7 +41,7 @@ namespace QBXML.NET
                 }
                 catch(Exception e)
                 {
-
+                    throw e;
                 }
             }
         }

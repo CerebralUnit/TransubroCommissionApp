@@ -49,7 +49,7 @@ namespace TranSubroCommissions
                     }
                     else
                     {
-                        MessageBox.Show("This application cannot run while Quickbooks is open. Please close all instances of Quickbooks on this computer and try again.",
+                        MessageBox.Show("This application cannot run while Quickbooks is open. Please close all instances of Quickbooks on this computer and try again: Error Message - " + errorMessage,
                             "Quickbooks Connection Error",
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);

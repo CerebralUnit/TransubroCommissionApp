@@ -102,7 +102,7 @@ namespace Transubro.CMS.API
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.PropertyDamageAmount,
+                        CheckAmount = deposit.PropertyDamageAmount.Value,
                         Description = deposit.PropertyDamageDescription,
                         FileNumber = deposit.FileNumber + "-PD"
                     });
@@ -112,7 +112,7 @@ namespace Transubro.CMS.API
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.LossOfUseAmount,
+                        CheckAmount = deposit.LossOfUseAmount.Value,
                         Description = deposit.LossOfUseDescription,
                         FileNumber = deposit.FileNumber + "-LOU"
                     });
@@ -123,7 +123,7 @@ namespace Transubro.CMS.API
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.OtherAmount,
+                        CheckAmount = deposit.OtherAmount.Value,
                         Description = deposit.OtherDescription,
                         FileNumber = deposit.FileNumber + "-OTH"
                     });

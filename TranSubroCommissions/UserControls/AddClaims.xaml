@@ -121,8 +121,10 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
-                                                        <TextBox Margin="0 0 15 15" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Description" />
-                                                        <TextBox Margin="0 0 15 15" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Amt" />
+                                                <TextBox Margin="0 0 15 15" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Description" />
+
+                                                        <TextBox Name="louAmt" PreviewTextInput="currency_PreviewTextInput" PreviewKeyDown="currency_PreviewKeyDown"  Grid.Column="1" Margin="0 0 15 15"  HorizontalAlignment="Stretch" Text="{Binding Path=LossOfUseAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='C'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="LOU Amt" />
+                                                       
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -130,7 +132,7 @@
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
                                                         <TextBox Name="PDDesc" Margin="0 0 15 15" Grid.Column="0" LostFocus="PDDesc_LostFocus" Text="{Binding Path=PropertyDamageDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Description" />
-                                                        <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=PropertyDamageAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Amt" />
+                                                        <TextBox Margin="0 0 15 15" PreviewTextInput="currency_PreviewTextInput" PreviewKeyDown="currency_PreviewKeyDown" Grid.Column="1" Text="{Binding Path=PropertyDamageAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='C'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="PD Amt" />
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -138,7 +140,7 @@
                                                     <ColumnDefinition Width="250" />
                                                 </Grid.ColumnDefinitions>
                                                         <TextBox Margin="0 0 15 15" Grid.Column="0" Text="{Binding Path=OtherDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Description" />
-                                                        <TextBox Margin="0 0 15 15" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='c'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
+                                                        <TextBox Margin="0 0 15 15" PreviewTextInput="currency_PreviewTextInput" PreviewKeyDown="currency_PreviewKeyDown" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='C'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
                                             </Grid>
                                         </StackPanel>
                                                 <Button Margin="0 -80 5 0" Grid.Column="3" Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
