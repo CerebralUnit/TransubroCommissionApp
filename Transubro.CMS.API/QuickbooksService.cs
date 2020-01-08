@@ -23,12 +23,21 @@ namespace Transubro.CMS.API
 
             foreach (var vendor in vendors)
             {
+                if( vendor.CustomFields == null || 
+                    !vendor.CustomFields.ContainsKey("New Claim Percent") ||
+                    !vendor.CustomFields.ContainsKey("Old Claim Percent")
+                 )
+                {
+                    throw new Exception("The vendor with name " + vendor.Name + " is configured incorrectly. Please make sure that the follow custom fields are set in Quickbooks: 'New Claim Percent', and 'Old Claim Percent'");
+
+                }
+
                 clients.Add(new Client()
                 {
                     Name = vendor.Name,
                     ThresholdDate = vendor.CustomFields.ContainsKey("Old Claim Date") ? DateTime.Parse(vendor.CustomFields["Old Claim Date"]) : default(DateTime?),
-                    TransubroPercentageNew = decimal.Parse(vendor.CustomFields["New Claim Percent"])/100,
-                    TransubroPercentageOld = decimal.Parse(vendor.CustomFields["Old Claim Percent"])/100,
+                    ClientPercentageNew = decimal.Parse(vendor.CustomFields["New Claim Percent"])/100,
+                    ClientPercentageOld = decimal.Parse(vendor.CustomFields["Old Claim Percent"])/100,
                 });
             }
 
@@ -86,7 +95,7 @@ namespace Transubro.CMS.API
 
             return qbc.SearchEmployeesByName(name);
         }
-        public bool ProcessCheckDeposits(List<CheckDeposit> deposits)
+        public bool ProcessCheckDeposits(List<Check> checks)
         {
             var qbc = new QuickbooksClient(AppName);
 
@@ -96,42 +105,42 @@ namespace Transubro.CMS.API
 
             var itemResponses = new List<ItemServiceAddResponse>();
 
-            foreach (var deposit in deposits)
+            var deposit = new Deposit(checks);
+
+            foreach (var check in checks)
             {
-                if (deposit.PropertyDamageAmount > 0)
+                if (check.PropertyDamageAmount > 0)
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.PropertyDamageAmount.Value,
-                        Description = deposit.PropertyDamageDescription,
-                        FileNumber = deposit.FileNumber + "-PD"
+                        CheckAmount = check.PropertyDamageAmount.Value,
+                        Description = check.PropertyDamageDescription,
+                        FileNumber = check.FileNumber + "-PD"
                     });
                 }
 
-                if (deposit.LossOfUseAmount > 0)
+                if (check.LossOfUseAmount > 0)
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.LossOfUseAmount.Value,
-                        Description = deposit.LossOfUseDescription,
-                        FileNumber = deposit.FileNumber + "-LOU"
+                        CheckAmount = check.LossOfUseAmount.Value,
+                        Description = check.LossOfUseDescription,
+                        FileNumber = check.FileNumber + "-LOU"
                     });
                 }
 
 
-                if (deposit.OtherAmount > 0)
+                if (check.OtherAmount > 0)
                 {
                     claims.Add(new Claim()
                     {
-                        CheckAmount = deposit.OtherAmount.Value,
-                        Description = deposit.OtherDescription,
-                        FileNumber = deposit.FileNumber + "-OTH"
+                        CheckAmount = check.OtherAmount.Value,
+                        Description = check.OtherDescription,
+                        FileNumber = check.FileNumber + "-OTH"
                     });
-                }
-
-                depositResponses.Add(qbc.AddDeposit(deposit));
+                } 
             }
-
+            depositResponses.Add(qbc.AddDeposit(checks));
             itemResponses = qbc.AddItems(claims);
              
             return true;

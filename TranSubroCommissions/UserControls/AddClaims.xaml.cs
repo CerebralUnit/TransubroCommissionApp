@@ -24,7 +24,7 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class AddClaims : InjectableUserControl
     { 
-        public List<CheckDeposit> claims = new List<CheckDeposit>() { new CheckDeposit() };
+        public List<Check> claims = new List<Check>() { new Check() };
 
         public static List<string> InsuranceCompanies { get; set; }
         public AddClaims()
@@ -75,7 +75,7 @@ namespace TranSubroCommissions
        
         private void AddCheckButton_Click(object sender, RoutedEventArgs e)
         {
-            claims.Add(new CheckDeposit());
+            claims.Add(new Check());
             ClaimChecks.Items.Refresh();
         }
 
@@ -86,7 +86,7 @@ namespace TranSubroCommissions
 
         private void DeleteCheck_Click(object sender, RoutedEventArgs e)
         {
-            var claim = ((Button)sender).DataContext as CheckDeposit;
+            var claim = ((Button)sender).DataContext as Check;
 
             if (claims.Count > 1)
             { 
@@ -102,7 +102,7 @@ namespace TranSubroCommissions
         {
             bool isValid = true; 
             int claimCount = claims.Count;
-            List<CheckDeposit> emptyClaims = new List<CheckDeposit>();
+            List<Check> emptyClaims = new List<Check>();
             foreach (var claim in claims)
             {
 
@@ -134,7 +134,7 @@ namespace TranSubroCommissions
                 }
             }
 
-            List<CheckDeposit> validClaims = claims.Where(x => !emptyClaims.Contains(x)).ToList();
+            List<Check> validClaims = claims.Where(x => !emptyClaims.Contains(x)).ToList();
 
             if (validClaims.Count == 0 || !isValid)
             {
@@ -153,7 +153,7 @@ namespace TranSubroCommissions
                 { 
                     claims.Clear();
 
-                    claims.Add(new CheckDeposit());
+                    claims.Add(new Check());
 
                     ClaimChecks.Items.Refresh();
 

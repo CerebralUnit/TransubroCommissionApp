@@ -212,11 +212,11 @@ namespace QBXML.NET
 
             return ProcessRequest(xml);
         }
-        public DepositAddResponse AddDeposit<T>(T deposit)
+        public DepositAddResponse AddDeposit<T>(List<T> checks)
         {
             var converter = new QBXMLConverter();
 
-            string xml = converter.ConvertDeposit(deposit);
+            string xml = converter.ConvertDeposit(checks);
 
             string depositResponseXml = ProcessRequest(xml);
 
@@ -224,7 +224,7 @@ namespace QBXML.NET
 
             return response;
         }
-      
+        
         public List<ItemServiceAddResponse> AddItems<T>(List<T> items)
         {
             var converter = new QBXMLConverter();

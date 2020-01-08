@@ -15,15 +15,15 @@ namespace Transubro.CMS.Model
 
         public string Name { get; set; }
         public DateTime? ThresholdDate { get; set; }
-        public decimal TransubroPercentageOld { get; set; }
-        public decimal TransubroPercentageNew { get; set; }
-        public decimal ClientPercentageOld
+        public decimal ClientPercentageOld { get; set; }
+        public decimal ClientPercentageNew { get; set; }
+        public decimal TransubroPercentageOld
         {
-            get { return 1 - TransubroPercentageOld; }
+            get { return 1 - ClientPercentageOld; }
         }
-        public decimal ClientPercentageNew
+        public decimal TransubroPercentageNew
         {
-            get { return 1 - TransubroPercentageNew; }
+            get { return 1 - ClientPercentageNew; }
         }
         public List<SalesCommission> SalespersonSplits { get; set; }
     }

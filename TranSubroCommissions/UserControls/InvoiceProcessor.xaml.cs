@@ -141,10 +141,20 @@ namespace TranSubroCommissions
 
             return grid;
         }
-
+        private void ShowWarning(string message)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            });
+        }
         private void ProcessInvoices(DateTime? startDate, DateTime? endDate)
         {
-            ResetStatus();
+            invoices.Dispatcher.Invoke(() =>
+            {
+                invoices.Children.Clear();
+            });
+                ResetStatus();
             //Get all deposits in date range
             //Get all items that match the file numbers in the deposits
             //Get all of the clients based on the items
@@ -158,24 +168,31 @@ namespace TranSubroCommissions
                 UpdateStatus("Gathering deposits for " + startDate.Value.ToString("MM/dd/yy") + " to " + endDate.Value.ToString("MM/dd/yy"), UpdateType.Alert);
           
                 List<QuickbooksDeposit> deposits = qb.GetDepositsByDateRange(startDate.Value, endDate.Value);
+                List<DepositLine> checks = deposits.SelectMany(x => x.Lines).ToList();
 
-                Dictionary<string, List<QuickbooksDeposit>> depositsByClient = deposits
+                Dictionary<string, List<DepositLine>> checksByClient = checks 
                     .GroupBy(x =>
-                       x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo
+                       x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
                     )
                     .ToDictionary(x => x.Key, x => x.ToList());
                  
+                if(checksByClient.Any(x => x.Key == "NO MEMO"))
+                {
+                    ShowWarning("One or more deposits was missing a required Memo Line. The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU)");
+                }
+
+
                 UpdateStatus("Gathering clients", UpdateType.Alert);
 
-                List<string> clientNames = deposits.Select(x =>
-                    x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo
+                List<string> clientNames = checks.Select(x =>
+                    x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
                 ).Distinct().ToList();
 
                 Dictionary<string, Client> clients = qb.GetClients().Where(x => clientNames.Contains(x.Name)).ToDictionary(x => x.Name, x => x);
 
 
-                List<string> fileNumbers = deposits.Select(x =>
-                   x.Memo.IndexOf(" ") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf(" ")) : x.Memo
+                List<string> fileNumbers = checks.Select(x =>
+                   x.Memo != null && x.Memo.IndexOf(" ") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf(" ")) : x.Memo != null ? x.Memo : "NO MEMO"
                  )
                 .Distinct()
                 .ToList();
@@ -186,10 +203,19 @@ namespace TranSubroCommissions
 
                 Dictionary<string, List<Claim>> claimsByClient = claims
                     .GroupBy(x =>
-                        x.FileNumber.IndexOf("-") > -1 ? x.FileNumber.Substring(0, x.FileNumber.IndexOf("-")) : x.FileNumber
+                       x.FileNumber != null && 
+                       x.FileNumber.IndexOf("-") > -1 ? 
+                            x.FileNumber.Substring(0, x.FileNumber.IndexOf("-")) : 
+                            x.FileNumber != null ? 
+                                x.FileNumber : "NO FILENUMBER"
                     )
                     .ToDictionary(x => x.Key, x => x.ToList());
-                 
+
+                if (claimsByClient.Any(x => x.Key == "NO FILENUMBER"))
+                {
+                    ShowWarning("One or more claim items had an improperly formatted name.");
+                }
+
                 UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
 
                 List<Employee> salespersons = qbc.SearchEmployeesByName("{salesperson}");

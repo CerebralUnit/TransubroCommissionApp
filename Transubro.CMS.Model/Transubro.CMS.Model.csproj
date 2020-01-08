@@ -45,10 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckDeposit.cs" />
+    <Compile Include="Check.cs" />
     <Compile Include="Claim.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientInvoice.cs" />
+    <Compile Include="Deposit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SalesCommission.cs" />
     <Compile Include="SalesPerson.cs" />

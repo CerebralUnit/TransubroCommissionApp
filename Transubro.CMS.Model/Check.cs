@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Transubro.CMS.Model
 { 
     [QuickbooksDeposit]
-    public class CheckDeposit
+    public class Check
     {
         private string memo = "LOU";
 
@@ -57,7 +57,13 @@ namespace Transubro.CMS.Model
         public decimal CheckAmount {
             get
             {
-                return LossOfUseAmount.Value + PropertyDamageAmount.Value + OtherAmount.Value;
+                decimal value = 0;
+
+                value += LossOfUseAmount.HasValue ? LossOfUseAmount.Value : 0;
+                value += PropertyDamageAmount.HasValue ? PropertyDamageAmount.Value : 0;
+                value += OtherAmount.HasValue ? OtherAmount .Value : 0;
+
+                return value;
             }
         }
     }

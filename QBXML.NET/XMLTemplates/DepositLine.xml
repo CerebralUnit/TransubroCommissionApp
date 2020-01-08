@@ -1,0 +1,18 @@
+﻿<DepositLineAdd>
+  <EntityRef>
+    <FullName >{{DepositLineEntityFullName}}</FullName>
+  </EntityRef>
+  <AccountRef>
+    <FullName>Subrogation Client</FullName>
+    <!-- optional -->
+  </AccountRef>
+  <Memo>{{DepositLineMemo}}</Memo>
+  <!-- optional -->
+  <CheckNumber >{{CheckNumber}}</CheckNumber>
+  <!-- optional -->
+  <PaymentMethodRef>
+    <FullName >Check</FullName>
+    <!-- optional -->
+  </PaymentMethodRef>
+  <Amount >{{Amount}}</Amount>
+</DepositLineAdd>
