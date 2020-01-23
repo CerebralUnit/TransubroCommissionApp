@@ -1,0 +1,23 @@
+﻿
+<AccountQueryRq> 
+  <!-- AccountType may have one of the following values: 
+  AccountsPayable, 
+  AccountsReceivable, 
+  Bank,
+  CostOfGoodsSold, 
+  CreditCard, 
+  Equity, 
+  Expense, 
+  FixedAsset, 
+  Income, 
+  LongTermLiability, 
+  NonPosting, 
+  OtherAsset, 
+  OtherCurrentAsset, 
+  OtherCurrentLiability, 
+  OtherExpense, 
+  OtherIncome -->
+  <AccountType >{{AccountType}}</AccountType> 
+  <OwnerID >0</OwnerID> 
+</AccountQueryRq>
+  

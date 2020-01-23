@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,8 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class InvoiceProcessor : InjectableUserControl
     {
+        private const string FILENUMBER_SPLITTER = @"^([A-Z]+(?:[~-][A-Z]{1,3})?)-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Z]{2,5})?$";
+
         public enum UpdateType
         {
             Text,
@@ -148,6 +151,73 @@ namespace TranSubroCommissions
                 MessageBox.Show(message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             });
         }
+
+        private Dictionary<string, List<DepositLine>> GetChecksByClient(List<DepositLine> checks)
+        {
+            var response = new Dictionary<string, List<DepositLine>>();
+
+            foreach (var check in checks)
+            { 
+                string filenumber = "";
+
+                if (String.IsNullOrWhiteSpace(check.Memo))
+                {
+                    filenumber = "NO MEMO";
+                }
+                else
+                {
+                    filenumber = ParseFileNumber(check.Memo).FirstOrDefault() ?? "NO MEMO";
+                }
+                 
+                if (!response.ContainsKey(filenumber))
+                    response.Add(filenumber, new List<DepositLine>());
+
+                response[filenumber].Add(check);
+            }
+
+            return response;
+        }
+
+        private Dictionary<string, List<Claim>> GetClaimsByClient(List<Claim> claims)
+        {
+            var response = new Dictionary<string, List<Claim>>();
+            
+            foreach (var claim in claims)
+            {
+                var parsed = new List<string>();
+                string filenumber = "";
+
+                if (String.IsNullOrWhiteSpace(claim.FileNumber))
+                {
+                    filenumber = "NO FILENUMBER"; 
+                }
+                else
+                {
+                    filenumber = ParseFileNumber(claim.FileNumber).FirstOrDefault() ?? "NO FILENUMBER";
+                }
+                
+                if (!response.ContainsKey(filenumber))
+                    response.Add(filenumber, new List<Claim>());
+
+                response[filenumber].Add(claim);
+            }
+
+            return response;
+        }
+
+        private string GetFilenumberFromLineItem(string memo)
+        {
+            if (String.IsNullOrWhiteSpace(memo))
+                return "NO MEMO";
+
+            var parsed = ParseFileNumber(memo);
+
+            if (parsed.Count == 0)
+                return "NO MEMO";
+
+            return parsed[0] + "-" + parsed[1];
+        }
+
         private void ProcessInvoices(DateTime? startDate, DateTime? endDate)
         {
             invoices.Dispatcher.Invoke(() =>
@@ -170,13 +240,17 @@ namespace TranSubroCommissions
                 List<QuickbooksDeposit> deposits = qb.GetDepositsByDateRange(startDate.Value, endDate.Value);
                 List<DepositLine> checks = deposits.SelectMany(x => x.Lines).ToList();
 
-                Dictionary<string, List<DepositLine>> checksByClient = checks 
-                    .GroupBy(x =>
-                       x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
-                    )
-                    .ToDictionary(x => x.Key, x => x.ToList());
-                 
-                if(checksByClient.Any(x => x.Key == "NO MEMO"))
+
+                //Dictionary<string, List<DepositLine>> checksByClient = checks 
+                //    .GroupBy(x =>
+                //       x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
+                //    )
+                //    .ToDictionary(x => x.Key, x => x.ToList());
+
+                var checksByClient = GetChecksByClient(checks);
+
+
+                if (checksByClient.Any(x => x.Key == "NO MEMO"))
                 {
                     ShowWarning("One or more deposits was missing a required Memo Line. The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU)");
                 }
@@ -184,32 +258,23 @@ namespace TranSubroCommissions
 
                 UpdateStatus("Gathering clients", UpdateType.Alert);
 
-                List<string> clientNames = checks.Select(x =>
-                    x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
-                ).Distinct().ToList();
+                List<string> clientNames = checksByClient.Keys.Distinct().ToList();
 
                 Dictionary<string, Client> clients = qb.GetClients().Where(x => clientNames.Contains(x.Name)).ToDictionary(x => x.Name, x => x);
 
 
                 List<string> fileNumbers = checks.Select(x =>
-                   x.Memo != null && x.Memo.IndexOf(" ") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf(" ")) : x.Memo != null ? x.Memo : "NO MEMO"
+                    GetFilenumberFromLineItem(x.Memo)
                  )
                 .Distinct()
                 .ToList();
                  
                 UpdateStatus("Retrieving items to create invoice lines", UpdateType.Alert); 
 
-                List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
+                //List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
+                List<Claim> claims = qb.SearchClaims(fileNumbers, new DateTime(2019, 1, 1), DateTime.Now);
 
-                Dictionary<string, List<Claim>> claimsByClient = claims
-                    .GroupBy(x =>
-                       x.FileNumber != null && 
-                       x.FileNumber.IndexOf("-") > -1 ? 
-                            x.FileNumber.Substring(0, x.FileNumber.IndexOf("-")) : 
-                            x.FileNumber != null ? 
-                                x.FileNumber : "NO FILENUMBER"
-                    )
-                    .ToDictionary(x => x.Key, x => x.ToList());
+                Dictionary<string, List<Claim>> claimsByClient = GetClaimsByClient(claims);
 
                 if (claimsByClient.Any(x => x.Key == "NO FILENUMBER"))
                 {
@@ -370,6 +435,19 @@ namespace TranSubroCommissions
             }
         }
 
+        private List<string> ParseFileNumber(string filenumber)
+        {
+            var matches = Regex.Match(filenumber, FILENUMBER_SPLITTER);
+            var parsed = new List<string>();
+
+            for(var i = 1; i < matches.Groups.Count; i++)
+            {
+                parsed.Add(matches.Groups[i].Value);
+            }
+
+            return parsed;
+        }
+
         private decimal GetCompanyPercentForCheck(string fileNumber, Client client)
         {
             string[] fileNumberSplit = fileNumber.Split('-');
@@ -390,18 +468,21 @@ namespace TranSubroCommissions
 
         private decimal GetClientPercentForCheck(string fileNumber, Client client)
         {
-            string[] fileNumberSplit = fileNumber.Split('-');
+            var parsed = ParseFileNumber(fileNumber);
             decimal commission = client.ClientPercentageNew;
 
-            if(fileNumberSplit.Length > 1)
+            if(parsed != null && parsed.Count > 1)
             {
-                string dateString = fileNumberSplit[1];
+                string dateString = parsed[1];
                 DateTime date = DateTime.MaxValue;
+                var dashIndex = dateString.IndexOf("-");
+
+                if (dashIndex > -1) 
+                    dateString = dateString.Substring(0, dashIndex); 
 
                 try
                 {
-                    date = DateTime.ParseExact(dateString, "MMddyy", CultureInfo.InvariantCulture);
-
+                    date = DateTime.ParseExact(dateString, "MMddyy", CultureInfo.InvariantCulture); 
                 }
                 catch
                 {
@@ -410,6 +491,10 @@ namespace TranSubroCommissions
 
                 if (date < client.ThresholdDate)
                     commission = client.ClientPercentageOld;
+            }
+            else
+            {
+                throw new FormatException("The date portion of the claim item was missing in item " + fileNumber);
             }
 
             return commission;

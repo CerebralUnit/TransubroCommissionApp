@@ -30,7 +30,9 @@ namespace Transubro.CMS.Model
         }
 
         [QuickbooksField("DepositLineEntityFullName")]
-        public string From { get; set; }
+        public string ReceivedFrom { get; set; }
+
+        public string FromAccount { get; set; }
 
         [QuickbooksField("DepositToAccount")] 
         public string To { get; set; }

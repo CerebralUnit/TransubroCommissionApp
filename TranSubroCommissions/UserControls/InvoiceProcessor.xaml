@@ -15,8 +15,8 @@
         <Border Padding="15 5" Grid.Row="0" Background="#f2f2f2">
             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                 <Button Name="StartButton" Click="StartButton_Click" Height="40" VerticalAlignment="Stretch" m:ShadowAssist.ShadowDepth="Depth0" Content="Start" />
-                <DatePicker FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="EndDate" HorizontalAlignment="Right" m:HintAssist.Hint="End Date" />
-                <DatePicker FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="StartDate" HorizontalAlignment="Right" m:HintAssist.Hint="Start Date" />
+                <DatePicker TabIndex="2" FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="EndDate" HorizontalAlignment="Right" m:HintAssist.Hint="End Date" />
+                <DatePicker TabIndex="1" FlowDirection="LeftToRight" m:HintAssist.IsFloating="True" Width="150" Margin="15 0 0  0" x:Name="StartDate" HorizontalAlignment="Right" m:HintAssist.Hint="Start Date" />
             </StackPanel>
         </Border>
         <Border Grid.Row="1">

@@ -34,7 +34,7 @@ namespace Transubro.CMS.API
 
                 clients.Add(new Client()
                 {
-                    Name = vendor.Name,
+                    Name = vendor.Name.ToUpper(),
                     ThresholdDate = vendor.CustomFields.ContainsKey("Old Claim Date") ? DateTime.Parse(vendor.CustomFields["Old Claim Date"]) : default(DateTime?),
                     ClientPercentageNew = decimal.Parse(vendor.CustomFields["New Claim Percent"])/100,
                     ClientPercentageOld = decimal.Parse(vendor.CustomFields["Old Claim Percent"])/100,
@@ -65,6 +65,13 @@ namespace Transubro.CMS.API
             var qbc = new QuickbooksClient(AppName);
  
             return qbc.SearchItems<Claim>(fileNumbers, startDate, endDate);
+        }
+
+        public List<QuickbooksAccount> GetIncomeAccounts()
+        {
+            var qbc = new QuickbooksClient(AppName);
+
+            return qbc.GetAccountsByType("Income");
         }
 
         public List<Claim> SearchClaims(string client, DateTime startDate, DateTime endDate)

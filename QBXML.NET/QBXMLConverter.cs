@@ -25,7 +25,8 @@ namespace QBXML.NET
         private const string EmployeeQueryTemplate            = @"XMLTemplates\EmployeeQueryByName.xml"; 
         private const string CustomerQueryTemplate            = @"XMLTemplates\CustomerQuery.xml";
         private const string ItemPrefixFilterTemplate         = @"XMLTemplates\ItemQueryPrefixFilter.xml";
-        
+        private const string AccountQueryTemplate         = @"XMLTemplates\AccountQuery.xml";
+
 
 
         public string ConvertItem(object item )
@@ -268,6 +269,28 @@ namespace QBXML.NET
 
             return response;
         }
+
+        public List<QuickbooksAccount> DeserializeAccountQueryResponse(string xml)
+        {
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+            XmlNodeList accountResponseNodes = xmlDoc.GetElementsByTagName("AccountRet");
+            var response = new List<QuickbooksAccount>();
+            foreach (XmlNode node in accountResponseNodes)
+            {
+                var account = new QuickbooksAccount()
+                {
+                    ListId = node["ListID"]?.InnerText,
+                    FullName = node["FullName"]?.InnerText
+                };
+
+                response.Add(account);
+            }
+
+            return response; 
+        }
+
         public List<Employee> DeserializeEmployeeQueryResponse(string xml)
         {
             var xmlDoc = new XmlDocument();
@@ -326,7 +349,20 @@ namespace QBXML.NET
 
             return response;
         }
+        public string ConvertAccountQuery(string type)
+        {
+            var template = GetTemplateText(AccountQueryTemplate);
 
+            string xml = "";
+
+            if (template != null)
+            {
+                xml = template
+                        .Replace("{{AccountType}}", type);
+            }
+
+            return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
+        }
         public string ConvertEmployeeQuery(string name)
         {
             var template = GetTemplateText(EmployeeQueryTemplate);

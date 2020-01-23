@@ -36,7 +36,7 @@
                         <local:InvoiceProcessor></local:InvoiceProcessor>
                     </Border>
                 </TabItem>
-                <TabItem Header="New Claims">
+                <TabItem Header="Add Deposit">
                     <Border Padding="0">
                         <local:AddClaims></local:AddClaims>
                     </Border>

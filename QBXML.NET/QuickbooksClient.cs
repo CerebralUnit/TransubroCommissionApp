@@ -12,7 +12,7 @@ namespace QBXML.NET
     public class QuickbooksClient
     {
         private string appName;
-        private const string companyFile = @"C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubro, inc..qbw";
+        private const string companyFile = @"C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubroinc.qbw";
 
         protected static RequestProcessor2 MyQbXMLRP2;
         private static string ticket = null;
@@ -23,7 +23,7 @@ namespace QBXML.NET
         {
             appName = applicationName;
 
-            if(MyQbXMLRP2 == null)
+            if(MyQbXMLRP2 == null) 
             {
                 MyQbXMLRP2 = new RequestProcessor2(); 
                 MyQbXMLRP2.OpenConnection2("", appName, QBXMLRPConnectionType.localQBD); 
@@ -98,6 +98,20 @@ namespace QBXML.NET
            
             return customers;
         }
+
+        public List<QuickbooksAccount> GetAccountsByType(string type)
+        {
+            var converter = new QBXMLConverter();
+
+            string xml = converter.ConvertAccountQuery(type);
+
+            string responseXml = ProcessRequest(xml);
+
+            List<QuickbooksAccount> accounts = converter.DeserializeAccountQueryResponse(responseXml);
+
+            return accounts;
+        }
+
         public List<Employee> SearchEmployeesByName(string name)
         {
             var converter = new QBXMLConverter();

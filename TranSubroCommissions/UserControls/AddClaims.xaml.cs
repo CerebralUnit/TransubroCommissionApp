@@ -1,4 +1,5 @@
 ﻿using Ninject;
+using QBXML.NET.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,15 +28,23 @@ namespace TranSubroCommissions
         public List<Check> claims = new List<Check>() { new Check() };
 
         public static List<string> InsuranceCompanies { get; set; }
+        public static List<string> IncomeAccounts { get; set; }
+
+        private bool insuranceDropdownOpen = false;
+        private bool incomeDropdownOpen = false;
+
         public AddClaims()
-        {
+        {            
             InitializeComponent();
-              
+             
             this.DataContext = this;
             ClaimChecks.ItemsSource = claims;
-
+          
             if(InsuranceCompanies == null)
                 InsuranceCompanies = new List<string>() { "CONNECTING TO QUICKBOOKS... " };
+
+            if (IncomeAccounts == null)
+                IncomeAccounts = new List<string>() { "CONNECTING TO QUICKBOOKS... " };
 
             this.Loaded += delegate
             { 
@@ -69,6 +78,34 @@ namespace TranSubroCommissions
                         } 
                     });
                 }
+                if (IncomeAccounts.Count == 1)
+                {
+                    Task.Run(() => {
+                        try
+                        {
+                            var qbService = new QuickbooksService();
+
+                            IncomeAccounts = qbService.GetIncomeAccounts().Select(x => x.FullName).ToList();
+ 
+                        }
+                        catch (Exception ex)
+                        {
+                            var st = new StackTrace(ex, true);
+                            // Get the top stack frame
+                            var frame = st.GetFrame(0);
+                            // Get the line number from the stack frame
+                            var line = frame.GetFileLineNumber();
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                MessageBox.Show("There was an error when trying to retrieve income accounts: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
+                                 "Quickbooks Error",
+                                 MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+                            });
+                        }
+                    });
+                }
+
             };
         }
 
@@ -108,7 +145,7 @@ namespace TranSubroCommissions
 
                 if ( 
                    String.IsNullOrWhiteSpace(claim.FileNumber) &&
-                   String.IsNullOrWhiteSpace(claim.From) &&
+                   String.IsNullOrWhiteSpace(claim.ReceivedFrom) &&
                    String.IsNullOrWhiteSpace(claim.LossOfUseDescription) &&
                    String.IsNullOrWhiteSpace(claim.PropertyDamageDescription) &&
                    String.IsNullOrWhiteSpace(claim.Memo) &&
@@ -122,7 +159,7 @@ namespace TranSubroCommissions
                 if (
                
                     String.IsNullOrWhiteSpace(claim.FileNumber) ||
-                    String.IsNullOrWhiteSpace(claim.From) ||
+                    String.IsNullOrWhiteSpace(claim.ReceivedFrom) ||
                     (String.IsNullOrWhiteSpace(claim.LossOfUseDescription) && String.IsNullOrWhiteSpace(claim.PropertyDamageDescription)) ||
                     String.IsNullOrWhiteSpace(claim.Memo) ||
                     String.IsNullOrWhiteSpace(claim.CheckNumber) ||
@@ -179,7 +216,8 @@ namespace TranSubroCommissions
 
         private void ClaimChecks_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (!e.Handled)
+            
+            if (!e.Handled && !insuranceDropdownOpen && !incomeDropdownOpen)
             {
                 e.Handled = true;
                 var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
@@ -235,6 +273,26 @@ namespace TranSubroCommissions
                 e.Handled = true;
                 return;
             }
+        }
+
+        private void InsuranceCompaniesCombo_DropDownOpened(object sender, EventArgs e)
+        {
+            insuranceDropdownOpen = true;
+        }
+
+        private void IncomeAccountsCombo_DropDownOpened(object sender, EventArgs e)
+        {
+            incomeDropdownOpen = true;
+        }
+
+        private void IncomeAccountsCombo_DropDownClosed(object sender, EventArgs e)
+        {
+            incomeDropdownOpen = false;
+        }
+
+        private void InsuranceCompaniesCombo_DropDownClosed(object sender, EventArgs e)
+        {
+            insuranceDropdownOpen = false;
         }
     }
 }

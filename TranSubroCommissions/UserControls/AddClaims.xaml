@@ -101,21 +101,23 @@
                                                
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="250" /> 
-                                            <ColumnDefinition Width="20" /> 
+                                            <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="20" /> 
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                                 <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=FileNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="File #" />
-                                                <ComboBox Margin="0 -3 15 15" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"  ItemsSource="{Binding InsuranceCompanies,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=From, UpdateSourceTrigger=PropertyChanged}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="From" />
+                                                <ComboBox DropDownOpened="InsuranceCompaniesCombo_DropDownOpened" DropDownClosed="InsuranceCompaniesCombo_DropDownClosed" x:Name="InsuranceCompaniesCombo" Margin="0 -3 15 15" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"  ItemsSource="{Binding InsuranceCompanies,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=ReceivedFrom, UpdateSourceTrigger=PropertyChanged}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="Received From" />
+                                                <ComboBox DropDownOpened="IncomeAccountsCombo_DropDownOpened" DropDownClosed="IncomeAccountsCombo_DropDownClosed" x:Name="IncomeAccountsCombo" Margin="0 -3 15 15" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top"  ItemsSource="{Binding IncomeAccounts,  RelativeSource={RelativeSource AncestorType=local:InjectableUserControl}}" SelectedItem="{Binding Path=FromAccount, UpdateSourceTrigger=PropertyChanged}"  m:HintAssist.IsFloating="True" m:HintAssist.Hint="From Account" />
 
-                                                <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" Text="{Binding Path=CheckNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Check #" />
+                                                <TextBox Margin="0 0 15 15"  VerticalAlignment="Top" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch" Text="{Binding Path=CheckNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Check #" />
 
 
-                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
+                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
@@ -143,7 +145,7 @@
                                                         <TextBox Margin="0 0 15 15" PreviewTextInput="currency_PreviewTextInput" PreviewKeyDown="currency_PreviewKeyDown" Grid.Column="1" Text="{Binding Path=OtherAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='C'}" m:HintAssist.IsFloating="True" m:HintAssist.Hint="Other Amt" />
                                             </Grid>
                                         </StackPanel>
-                                                <Button Margin="0 -80 5 0" Grid.Column="3" Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
+                                                <Button Margin="0 -80 5 0" Grid.Column="4" Name="DeleteCheck" Click="DeleteCheck_Click" m:ShadowAssist.ShadowDepth="Depth0" Background="Transparent" Foreground="Black" BorderThickness="0" Padding="0">
                                                     <Button.Content>
                                                         <m:PackIcon Kind="Close" ></m:PackIcon>
                                                     </Button.Content>
