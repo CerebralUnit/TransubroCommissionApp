@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Transubro.CMS.Model
 {
-    [QuickbooksItem(ItemType.Service, "Subrogation Client")]
+    [QuickbooksItem(ItemType.Service, "Subrogation Clients")]
     public class Claim
     {
         [QuickbooksField("Name")]

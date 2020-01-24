@@ -113,7 +113,7 @@ namespace QBXML.NET
             {
                 xml = template
                     .Replace("{{Date}}", DateTime.Now.ToString("yyyy-MM-dd"))
-                    .Replace("{{DepositToAccount}}", "America First")
+                    .Replace("{{DepositToAccount}}", "Operating Account - 3363")
                     .Replace("{{Memo}}", "Deposit")
                     .Replace("{{DepositLines}}", linesXml);
             } 
@@ -140,6 +140,7 @@ namespace QBXML.NET
                     xml = template
                             .Replace("{{Memo}}", fields["Memo"].ToString())
                             .Replace("{{DepositLineEntityFullName}}", fields["DepositLineEntityFullName"].ToString())
+                            .Replace("{{FromAccount}}", fields["AccountRef"].ToString())
                             .Replace("{{DepositLineMemo}}", fields["DepositLineMemo"].ToString())
                             .Replace("{{CheckNumber}}", fields["CheckNumber"].ToString())
                             .Replace("{{Amount}}", ((decimal)fields["Amount"]).ToString("F2"));
@@ -558,6 +559,7 @@ namespace QBXML.NET
         {
             return fieldValues.ContainsKey("DepositLineEntityFullName") &&  
                    fieldValues.ContainsKey("Memo") &&  
+                   fieldValues.ContainsKey("AccountRef") &&
                    fieldValues.ContainsKey("DepositLineMemo") && 
                    fieldValues.ContainsKey("CheckNumber") &&
                    fieldValues.ContainsKey("Amount");

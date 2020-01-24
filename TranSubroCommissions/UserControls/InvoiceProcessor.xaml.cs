@@ -94,6 +94,8 @@ namespace TranSubroCommissions
             public string Description { get; set; }
             public string CheckAmount { get; set; }
             public string AmountDue { get; set; }
+            public string CommissionRate { get; set; }
+            public string SplitRate { get; set; }
         }
         private DataGrid GetInvoiceGrid(string recipientType)
         {
@@ -102,6 +104,7 @@ namespace TranSubroCommissions
             s.Setters.Add(new Setter(DataGridCell.BorderThicknessProperty, new Thickness(0)));
             s.Setters.Add(new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent));
 
+            var splitType = recipientType == "Salesperson" ? "TS" : "Client";
 
             var grid = new DataGrid();
             grid.PreviewMouseWheel += Grid_PreviewMouseWheel;
@@ -122,23 +125,45 @@ namespace TranSubroCommissions
             DataGridTextColumn descColumn = new DataGridTextColumn();
             descColumn.Header = "Description";
             descColumn.Binding = new Binding("Description");
-            descColumn.MinWidth = 300;
+            descColumn.MinWidth = 220;
+
             DataGridTextColumn checkAmtColumn = new DataGridTextColumn();
             checkAmtColumn.Header = "Check Amt";
             checkAmtColumn.Binding = new Binding("CheckAmount");
             checkAmtColumn.HeaderStyle = s;
             checkAmtColumn.CellStyle = s;
-            checkAmtColumn.MinWidth = 150;
+            checkAmtColumn.MinWidth = 100;
+
+            DataGridTextColumn percentColumn = new DataGridTextColumn();
+            percentColumn.Header = splitType + " %";
+            percentColumn.Binding = new Binding("SplitRate");
+            percentColumn.HeaderStyle = s;
+            percentColumn.CellStyle = s;
+            percentColumn.MinWidth = 80;
+             
+            DataGridTextColumn commissionColumn = new DataGridTextColumn();
+            commissionColumn.Header = "Sales %";
+            commissionColumn.Binding = new Binding("CommissionRate");
+            commissionColumn.HeaderStyle = s;
+            commissionColumn.CellStyle = s;
+            commissionColumn.MinWidth = 80;
+
             DataGridTextColumn dueColumn = new DataGridTextColumn();
             dueColumn.Header = "Due " + recipientType;
             dueColumn.Binding = new Binding("AmountDue");
             dueColumn.HeaderStyle = s;
             dueColumn.CellStyle = s;
             dueColumn.MinWidth = 150;
+
             grid.Columns.Add(textColumn);
             grid.Columns.Add(fileNoColumn);
             grid.Columns.Add(descColumn);
             grid.Columns.Add(checkAmtColumn);
+            grid.Columns.Add(percentColumn);
+
+            if (recipientType == "Salesperson")
+                grid.Columns.Add(commissionColumn);
+
             grid.Columns.Add(dueColumn);
 
 
@@ -324,14 +349,16 @@ namespace TranSubroCommissions
                     {
                         decimal clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
                         decimal dueClient = clientPercent * claim.CheckAmount;
-                        
+
                         invoiceLines.Add(new InvoiceLine()
                         {
                             LineNumber = line.ToString(),
                             FileNumber = claim.FileNumber,
                             Description = claim.Description,
                             CheckAmount = claim.CheckAmount.ToString("c"),
-                            AmountDue = dueClient.ToString("c")
+                            AmountDue = dueClient.ToString("c"),
+                            SplitRate = (clientPercent * 100).ToString("#.000"),
+                            CommissionRate = ""
                         });
  
                         clientDueTotal += dueClient;
@@ -347,6 +374,8 @@ namespace TranSubroCommissions
                         FileNumber = "",
                         Description = "",
                         CheckAmount = "",
+                        SplitRate = "",
+                        CommissionRate = "",
                         AmountDue = ""
                     });
                    
@@ -355,7 +384,9 @@ namespace TranSubroCommissions
                         LineNumber = "",
                         FileNumber = "",
                         Description = "",
-                        CheckAmount = "Total Client Due",
+                        CheckAmount = "",
+                        SplitRate = "",
+                        CommissionRate = "Total Client Due",
                         AmountDue = clientDueTotal.ToString("c")
                     });
 
@@ -406,6 +437,8 @@ namespace TranSubroCommissions
                                     FileNumber = clientClaim.FileNumber,
                                     Description = clientClaim.Description,
                                     CheckAmount = clientClaim.CheckAmount.ToString("c"),
+                                    SplitRate = (companyPercent * 100).ToString("#.000"),
+                                    CommissionRate = commission.Amount.ToString("#.000"),
                                     AmountDue = salesPersonDue.ToString("c")
                                 });
  

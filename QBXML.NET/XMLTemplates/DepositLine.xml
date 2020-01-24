@@ -3,7 +3,7 @@
     <FullName >{{DepositLineEntityFullName}}</FullName>
   </EntityRef>
   <AccountRef>
-    <FullName>Subrogation Client</FullName>
+    <FullName>{{FromAccount}}</FullName>
     <!-- optional -->
   </AccountRef>
   <Memo>{{DepositLineMemo}}</Memo>

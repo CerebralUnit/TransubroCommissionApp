@@ -27,7 +27,148 @@ namespace TranSubroCommissions
     { 
         public List<Check> claims = new List<Check>() { new Check() };
 
-        public static List<string> InsuranceCompanies { get; set; }
+        //public List<Check> claims = new List<Check>(){
+        //    new Check()
+        //    {
+                
+        //        CheckNumber = "0923842",
+        //        FileNumber = "GMC-010120-1111",
+        //        FromAccount = "Insurance Income:GMC",
+        //        LossOfUseAmount = 5296.440m,
+        //        LossOfUseDescription = "Loss of use at 100% for 5 days", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = 2422.00m,
+        //        PropertyDamageDescription = "Property damage at 50% for 5 days",
+        //        ReceivedFrom = "Allstate Insurance Co.",
+        //        To = null,
+                
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "00203085028",
+        //        FileNumber = "NEX-MO-010120",
+        //        FromAccount = "Insurance Income:NEX-AZ",
+        //        LossOfUseAmount = 740.00m,
+        //        LossOfUseDescription = "Loss of use at 80% for 3 days", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = null,
+        //        PropertyDamageDescription = null,
+        //        ReceivedFrom = "Encompass Insurance",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "123515352",
+        //        FileNumber = "NEX-MO-010120-1111",
+        //        FromAccount = "Insurance Income:NEX-MO",
+        //        LossOfUseAmount = null,
+        //        LossOfUseDescription = null, 
+        //        OtherAmount = 1250.00m,
+        //        OtherDescription = "Arbitration settlement",
+        //        PropertyDamageAmount = null,
+        //        PropertyDamageDescription = null,
+        //        ReceivedFrom = "AAA",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "67187173",
+        //        FileNumber = "ACE-010120-1111",
+        //        FromAccount = "Insurance Income:ACE",
+        //        LossOfUseAmount = 22348.00m,
+        //        LossOfUseDescription = "Loss of use for 30 days at 100%", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = 422.00m,
+        //        PropertyDamageDescription = "Property damage at 10%",
+        //        ReceivedFrom = "Country Wide Insurance",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "44423527",
+        //        FileNumber = "PTS-010120-1111",
+        //        FromAccount = "Insurance Income:PTS",
+        //        LossOfUseAmount = null,
+        //        LossOfUseDescription = null, 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = 6238.220m,
+        //        PropertyDamageDescription = "Property damage at 100%",
+        //        ReceivedFrom = "GEICO Indemnity Ins. Co.",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "6123612361",
+        //        FileNumber = "NEX-AZ-010120-1111",
+        //        FromAccount = "Insurance Income:NEX-CT",
+        //        LossOfUseAmount = 511.900m,
+        //        LossOfUseDescription = "Loss of use at 50% for 12 days", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = null,
+        //        PropertyDamageDescription = null,
+        //        ReceivedFrom = "USAA Casualty Insurance Co.",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "2136126",
+        //        FileNumber = "MPC-010120-1111",
+        //        FromAccount = "Insurance Income:MPC",
+        //        LossOfUseAmount = 2480.00m,
+        //        LossOfUseDescription = "Loss of use at 100% for 11 days", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = 400.00m,
+        //        PropertyDamageDescription = "Property Damage settlement 400",
+        //        ReceivedFrom = "Selective Way Insurance Co.",
+        //        To = null,  
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "11126362",
+        //        FileNumber = "COCH-010120-1111",
+        //        FromAccount = "Insurance Income:COCH-OH",
+        //        LossOfUseAmount = null,
+        //        LossOfUseDescription = "", 
+        //        OtherAmount = null,
+        //        OtherDescription = null,
+        //        PropertyDamageAmount = 182.120m,
+        //        PropertyDamageDescription = "Property damage at 12%",
+        //        ReceivedFrom = "Zurich American Insurance Company",
+        //        To = null, 
+        //    },
+        //    new Check()
+        //        {
+                    
+        //        CheckNumber = "623621361",
+        //        FileNumber = "JO-010120-1111",
+        //        FromAccount = "Insurance Income:JO -Jofaz Transportation",
+        //        LossOfUseAmount = null,
+        //        LossOfUseDescription = null,
+               
+        //        OtherAmount = 2000.00m,
+        //        OtherDescription = "Settlement",
+        //        PropertyDamageAmount = null,
+        //        PropertyDamageDescription = null,
+        //        ReceivedFrom = "Wesco Insurance Co.",
+        //        To = null, 
+        //    }
+        //};
+
+
+    public static List<string> InsuranceCompanies { get; set; }
         public static List<string> IncomeAccounts { get; set; }
 
         private bool insuranceDropdownOpen = false;
@@ -85,7 +226,13 @@ namespace TranSubroCommissions
                         {
                             var qbService = new QuickbooksService();
 
-                            IncomeAccounts = qbService.GetIncomeAccounts().Select(x => x.FullName).ToList();
+                            var incomeAccounts = qbService.GetIncomeAccounts();
+
+                            if(incomeAccounts != null)
+                            {
+                                IncomeAccounts = incomeAccounts.Select(x => x.FullName).ToList();
+                            }
+                            
  
                         }
                         catch (Exception ex)
@@ -95,13 +242,13 @@ namespace TranSubroCommissions
                             var frame = st.GetFrame(0);
                             // Get the line number from the stack frame
                             var line = frame.GetFileLineNumber();
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                MessageBox.Show("There was an error when trying to retrieve income accounts: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
-                                 "Quickbooks Error",
-                                 MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-                            });
+                            //this.Dispatcher.Invoke(() =>
+                            //{
+                            //    MessageBox.Show("There was an error when trying to retrieve income accounts: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
+                            //     "Quickbooks Error",
+                            //     MessageBoxButton.OK,
+                            //    MessageBoxImage.Error);
+                            //});
                         }
                     });
                 }
@@ -160,7 +307,7 @@ namespace TranSubroCommissions
                
                     String.IsNullOrWhiteSpace(claim.FileNumber) ||
                     String.IsNullOrWhiteSpace(claim.ReceivedFrom) ||
-                    (String.IsNullOrWhiteSpace(claim.LossOfUseDescription) && String.IsNullOrWhiteSpace(claim.PropertyDamageDescription)) ||
+                    (String.IsNullOrWhiteSpace(claim.LossOfUseDescription) && String.IsNullOrWhiteSpace(claim.PropertyDamageDescription) && String.IsNullOrWhiteSpace(claim.OtherDescription)) ||
                     String.IsNullOrWhiteSpace(claim.Memo) ||
                     String.IsNullOrWhiteSpace(claim.CheckNumber) ||
                     claim.CheckAmount == 0)
