@@ -45,6 +45,8 @@ namespace Transubro.CMS.Model
         public string FileNumber { get; set; } 
 
         public string LossOfUseDescription { get; set; }
+
+        public bool IsClosed { get; set; }
          
         public decimal? LossOfUseAmount { get; set; }
 

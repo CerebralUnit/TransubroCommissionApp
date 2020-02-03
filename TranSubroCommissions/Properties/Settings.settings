@@ -1,7 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TranSubroCommissions.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CompanyFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubroinc.qbw</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

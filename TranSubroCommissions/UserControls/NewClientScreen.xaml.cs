@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using Transubro.CMS.API;
 using Transubro.CMS.Model;
 using QBXML.NET;
+using TranSubroCommissions.Properties;
+
 namespace TranSubroCommissions
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace TranSubroCommissions
         public NewClientScreen()
         {
             InitializeComponent();
-            var employees = new QuickbooksService().SearchEmployees("{salesperson}");
+            var employees = new QuickbooksService(Settings.Default.CompanyFile).SearchEmployees("{salesperson}");
             SalesPersons = employees.ConvertAll(x => new SalesPerson()
             {
                 Id = x.ListID,
@@ -55,9 +57,9 @@ namespace TranSubroCommissions
 
         private void NewCommission_Click(object sender, RoutedEventArgs e)
         {
-            var qbService = new QuickbooksService();
+            var qbService = new QuickbooksService(Settings.Default.CompanyFile);
             qbService.GetClients();
-            var qbc = new QuickbooksClient("Transubro Commissions");
+            var qbc = new QuickbooksClient(Settings.Default.CompanyFile, "Transubro Commissions");
             //var items = qbc.SearchItems<Claim>("ACE", new DateTime(2019, 10, 14), new DateTime(2019, 12, 15)); 
             //var vendors = qbService.GetClients(); 
             //var salesPeople = qbc.GetVendorsByType ("Salesperson");

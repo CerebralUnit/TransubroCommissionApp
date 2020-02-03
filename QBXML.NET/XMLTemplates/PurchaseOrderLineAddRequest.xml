@@ -2,5 +2,6 @@
   <ItemRef>
     <FullName>{{ItemName}}</FullName>
   </ItemRef>
-  <Quantity>{{Quantity}}</Quantity> 
+  <Quantity>{{Quantity}}</Quantity>
+  <Rate>{{Rate}}</Rate>
 </PurchaseOrderLineAdd>

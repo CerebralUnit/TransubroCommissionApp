@@ -2,7 +2,8 @@
   <PurchaseOrderAdd>
     <VendorRef>
       <FullName>{{VendorName}}</FullName>
-    </VendorRef> 
+    </VendorRef>
+    <IsToBePrinted>true</IsToBePrinted>
     {{LineItems}}
   </PurchaseOrderAdd>
 </PurchaseOrderAddRq>

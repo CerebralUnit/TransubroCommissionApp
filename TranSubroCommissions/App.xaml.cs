@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Transubro.CMS.API;
-
+using TranSubroCommissions.Properties;
 namespace TranSubroCommissions
 {
     /// <summary>
@@ -29,7 +29,7 @@ namespace TranSubroCommissions
                 try
                 {
                     //simulate some work being done
-                    new QuickbooksClient(QuickbooksService.AppName);
+                    new QuickbooksClient(Settings.Default.CompanyFile, QuickbooksService.AppName);
                 }
                 catch(Exception ex)
                 {

@@ -25,7 +25,9 @@ namespace QBXML.NET
         private const string EmployeeQueryTemplate            = @"XMLTemplates\EmployeeQueryByName.xml"; 
         private const string CustomerQueryTemplate            = @"XMLTemplates\CustomerQuery.xml";
         private const string ItemPrefixFilterTemplate         = @"XMLTemplates\ItemQueryPrefixFilter.xml";
-        private const string AccountQueryTemplate         = @"XMLTemplates\AccountQuery.xml";
+        private const string AccountQueryTemplate             = @"XMLTemplates\AccountQuery.xml";
+        private const string PurchaseOrderAddTemplate         = @"XMLTemplates\PurchaseOrderAddRequest.xml";
+        private const string PurchaseOrderLineAddTemplate     = @"XMLTemplates\PurchaseOrderLineAddRequest.xml";
 
 
 
@@ -518,9 +520,98 @@ namespace QBXML.NET
             return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);  
         }
 
-        
+        public PurchaseOrderAddResponse ConvertPurchaseOrderAddResponse(string xml)
+        {
+            var response = new PurchaseOrderAddResponse();
 
-       
+            var xmlDoc = new XmlDocument();
+
+            xmlDoc.LoadXml(xml);
+
+            XmlNodeList responseNode = xmlDoc.GetElementsByTagName("PurchaseOrderAddRs");
+
+            XmlNodeList purchaseOrderNode = xmlDoc.GetElementsByTagName("PurchaseOrderRet");
+
+            XmlNodeList purchaseOrderLineNodes = xmlDoc.GetElementsByTagName("PurchaseOrderLineRet");
+
+            response.Status = new QuickbooksStatus()
+            {
+                Code = int.Parse(responseNode[0].Attributes["statusCode"].Value),
+                Severity = responseNode[0].Attributes["statusSeverity"].Value,
+                Message = responseNode[0].Attributes["statusMessage"].Value
+            };
+
+            response.TxnId = purchaseOrderNode[0]["TxnID"]?.InnerText;
+            response.TimeCreated = DateTime.Parse(purchaseOrderNode[0]["TimeCreated"]?.InnerText);
+            response.TimeModified = DateTime.Parse(purchaseOrderNode[0]["TimeModified"]?.InnerText);
+            response.EditSequence = long.Parse(purchaseOrderNode[0]["EditSequence"]?.InnerText);
+            response.TxnNumber = int.Parse(purchaseOrderNode[0]["TxnNumber"]?.InnerText);
+            response.TxnDate = DateTime.Parse(purchaseOrderNode[0]["TxnDate"]?.InnerText);
+ 
+
+            response.Lines = new List<PurchaseOrderLine>();
+ 
+            foreach (XmlNode lineNode in purchaseOrderLineNodes)
+            {
+                response.Lines.Add(new PurchaseOrderLine()
+                { 
+                    Description = lineNode["Desc"]?.InnerText,
+                    Qty = decimal.Parse(lineNode["Quantity"]?.InnerText),
+                    Rate = decimal.Parse(lineNode["Rate"]?.InnerText),
+                    Item = lineNode["ItemRef"]?["FullName"]?.InnerText,
+                    Amount = decimal.Parse(lineNode["Amount"]?.InnerText)
+                });
+
+            }
+
+            return response;
+        }
+        public string ConvertPurchaseOrder(PurchaseOrder purchaseOrder)
+        {
+            string envelopeXml = GetTemplateText(EnvelopeTemplate);
+
+            var template = GetTemplateText(PurchaseOrderAddTemplate);
+             
+            string xml = "";
+
+            if(template != null)
+            {
+                xml = template
+                        .Replace("{{VendorName}}", purchaseOrder.VendorName)
+                        .Replace("{{LineItems}}", ConvertPurchaseOrderLines(purchaseOrder.Lines)); 
+            }
+              
+            return envelopeXml.Replace("{{Requests}}", xml);
+        }
+        public string ConvertPurchaseOrderLines(List<PurchaseOrderLine> lines)
+        { 
+            string addRequests = "";
+
+            foreach (var line in lines)
+            {
+                addRequests += ConvertPurchaseOrderLine(line);
+            }
+
+            return addRequests;
+        }
+
+
+        public string ConvertPurchaseOrderLine(PurchaseOrderLine line)
+        {
+            var template = GetTemplateText(PurchaseOrderLineAddTemplate);
+            string xml = "";
+
+            if(template != null)
+            {
+                xml = template
+                        .Replace("{{ItemName}}", line.Item)
+                        .Replace("{{Quantity}}", line.Qty.ToString())
+                        .Replace("{{Rate}}", line.Rate.ToString());
+            }
+
+            return xml;
+        }
+
         public string ConvertItems<T>(List<T> items)
         {
             string envelopeXml = GetTemplateText(EnvelopeTemplate);

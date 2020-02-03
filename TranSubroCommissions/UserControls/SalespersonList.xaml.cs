@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Transubro.CMS.API;
 using Transubro.CMS.Model;
+using TranSubroCommissions.Properties;
 
 namespace TranSubroCommissions
 {
@@ -28,7 +29,7 @@ namespace TranSubroCommissions
             InitializeComponent();
             this.Loaded += delegate
             {
-                SalespersonsList.ItemsSource =  new QuickbooksService().SearchEmployees("{salesperson}");
+                SalespersonsList.ItemsSource =  new QuickbooksService(Settings.Default.CompanyFile).SearchEmployees("{salesperson}");
             };
         }
 

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\QuickbooksPurchaseOrderAttribute.cs" />
     <Compile Include="Attributes\QuickbooksDepositAttribute.cs" />
     <Compile Include="Attributes\QuickbooksField.cs" />
     <Compile Include="Attributes\QuickbooksVendorAttribute.cs" />
@@ -58,6 +59,9 @@
     <Compile Include="Model\ItemServiceAddResponse.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\PayrollWageItem.cs" />
+    <Compile Include="Model\PurchaseOrder.cs" />
+    <Compile Include="Model\PurchaseOrderAddResponse.cs" />
+    <Compile Include="Model\PurchaseOrderLine.cs" />
     <Compile Include="Model\QuickbooksDeposit.cs" />
     <Compile Include="Model\QuickbooksEntity.cs" />
     <Compile Include="Model\QuickbooksAccount.cs" />

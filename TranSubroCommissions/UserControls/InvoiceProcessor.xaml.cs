@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Transubro.CMS.API;
 using Transubro.CMS.Model;
+using TranSubroCommissions.Properties;
 
 namespace TranSubroCommissions
 {
@@ -34,10 +35,12 @@ namespace TranSubroCommissions
             Alert,
             Title
         }
+
         public InvoiceProcessor()
         {
             InitializeComponent();
         }
+
         private void UpdateStatus(string Message, UpdateType type = UpdateType.Text)
         {
             StatusBlock.Dispatcher.Invoke(() => {
@@ -87,16 +90,7 @@ namespace TranSubroCommissions
                 parent?.RaiseEvent(eventArg);
             }
         }
-        public class InvoiceLine
-        {
-            public string LineNumber { get; set; }
-            public string FileNumber { get; set; }
-            public string Description { get; set; }
-            public string CheckAmount { get; set; }
-            public string AmountDue { get; set; }
-            public string CommissionRate { get; set; }
-            public string SplitRate { get; set; }
-        }
+      
         private DataGrid GetInvoiceGrid(string recipientType)
         {
             Style s = new Style();
@@ -249,38 +243,24 @@ namespace TranSubroCommissions
             {
                 invoices.Children.Clear();
             });
-                ResetStatus();
-            //Get all deposits in date range
-            //Get all items that match the file numbers in the deposits
-            //Get all of the clients based on the items
-            //Get all of the salespeople for the clients
 
+            ResetStatus();
+          
             if (startDate.HasValue && endDate.HasValue)
             {
-                var qbc = new QuickbooksClient(QuickbooksService.AppName);
-                var qb = new QuickbooksService();
+                var qbc = new QuickbooksClient(Settings.Default.CompanyFile, QuickbooksService.AppName);
+                var qb = new QuickbooksService(Settings.Default.CompanyFile);
 
                 UpdateStatus("Gathering deposits for " + startDate.Value.ToString("MM/dd/yy") + " to " + endDate.Value.ToString("MM/dd/yy"), UpdateType.Alert);
           
                 List<QuickbooksDeposit> deposits = qb.GetDepositsByDateRange(startDate.Value, endDate.Value);
                 List<DepositLine> checks = deposits.SelectMany(x => x.Lines).ToList();
-
-
-                //Dictionary<string, List<DepositLine>> checksByClient = checks 
-                //    .GroupBy(x =>
-                //       x.Memo != null && x.Memo.IndexOf("-") > -1 ? x.Memo.Substring(0, x.Memo.IndexOf("-")) : x.Memo != null ? x.Memo : "NO MEMO"
-                //    )
-                //    .ToDictionary(x => x.Key, x => x.ToList());
-
+                 
                 var checksByClient = GetChecksByClient(checks);
-
-
-                if (checksByClient.Any(x => x.Key == "NO MEMO"))
-                {
-                    ShowWarning("One or more deposits was missing a required Memo Line. The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU)");
-                }
-
-
+                 
+                if (checksByClient.Any(x => x.Key == "NO MEMO")) 
+                    ShowWarning("One or more deposits was missing a required Memo Line. The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU)"); 
+                 
                 UpdateStatus("Gathering clients", UpdateType.Alert);
 
                 List<string> clientNames = checksByClient.Keys.Distinct().ToList();
@@ -296,15 +276,12 @@ namespace TranSubroCommissions
                  
                 UpdateStatus("Retrieving items to create invoice lines", UpdateType.Alert); 
 
-                //List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
-                List<Claim> claims = qb.SearchClaims(fileNumbers, new DateTime(2019, 1, 1), DateTime.Now);
-
+                List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
+                
                 Dictionary<string, List<Claim>> claimsByClient = GetClaimsByClient(claims);
 
-                if (claimsByClient.Any(x => x.Key == "NO FILENUMBER"))
-                {
-                    ShowWarning("One or more claim items had an improperly formatted name.");
-                }
+                if (claimsByClient.Any(x => x.Key == "NO FILENUMBER")) 
+                    ShowWarning("One or more claim items had an improperly formatted name."); 
 
                 UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
 
@@ -317,6 +294,7 @@ namespace TranSubroCommissions
                 foreach (var client in clients)
                 {
                     DataGrid datagrid = null;
+                    
                     var invoiceLines = new List<InvoiceLine>();
                    
                     if (!claimsByClient.ContainsKey(client.Key))
@@ -331,6 +309,7 @@ namespace TranSubroCommissions
                      
                     invoices.Dispatcher.Invoke(() => {
                         datagrid = GetInvoiceGrid("Client");
+                        datagrid.Name = client.Key + "GridClientInvoices";
                         invoices.Children.Add(datagrid);
                         datagrid.ItemsSource = invoiceLines;
                     });
@@ -347,26 +326,55 @@ namespace TranSubroCommissions
 
                     foreach (var claim in invoice.Claims)
                     {
-                        decimal clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
-                        decimal dueClient = clientPercent * claim.CheckAmount;
+                        decimal clientPercent = 0;
+                        decimal dueClient = 0;
 
-                        invoiceLines.Add(new InvoiceLine()
+                        if (claim.CheckAmount < 0)
                         {
-                            LineNumber = line.ToString(),
-                            FileNumber = claim.FileNumber,
-                            Description = claim.Description,
-                            CheckAmount = claim.CheckAmount.ToString("c"),
-                            AmountDue = dueClient.ToString("c"),
-                            SplitRate = (clientPercent * 100).ToString("#.000"),
-                            CommissionRate = ""
-                        });
- 
+                            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+                            culture.NumberFormat.CurrencyNegativePattern = 1;
+
+                            dueClient = claim.CheckAmount;
+                            invoiceLines.Add(new InvoiceLine()
+                            {
+                                LineNumber = line.ToString(),
+                                FileNumber = "Disbursement",
+                                Description = claim.Description,
+                                CheckAmount = String.Format(culture, "{0:C}", dueClient),
+                                AmountDue = String.Format(culture, "{0:C}", dueClient),
+                                SplitRate = "",
+                                CommissionRate = ""
+                            });
+                        }
+                        else
+                        {
+                            clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
+                            dueClient = clientPercent * claim.CheckAmount;
+
+                            invoiceLines.Add(new InvoiceLine()
+                            {
+                                LineNumber = line.ToString(),
+                                FileNumber = claim.FileNumber,
+                                Description = claim.Description,
+                                CheckAmount = claim.CheckAmount.ToString("c"),
+                                AmountDue = dueClient.ToString("c"),
+                                SplitRate = (clientPercent * 100).ToString("#.000"),
+                                CommissionRate = ""
+                            });
+
+                        }
+                         
                         clientDueTotal += dueClient;
                         invoiceTotal += claim.CheckAmount;
                         line++;
                     }
                      
                     string items = invoice.Claims.Count > 1 ? "items" : "item";
+
+                    qb.AddClientInvoice(new Invoice() {
+                        ClientName = client.Key,
+                        Lines = new List<InvoiceLine>(invoiceLines)
+                    });
 
                     invoiceLines.Add(new InvoiceLine()
                     {
@@ -406,30 +414,38 @@ namespace TranSubroCommissions
                     var invoiceLines = new List<InvoiceLine>();
                     
                     int line = 1;
- 
-                    UpdateStatus("Commission invoice for " + salesperson.Name, UpdateType.Title);
-                     
+   
                     decimal invoiceTotal = 0;
                     decimal salesDueTotal = 0;
-
-                    invoices.Dispatcher.Invoke(() => {
-                        datagrid = GetInvoiceGrid("Salesperson");
-                        invoices.Children.Add(datagrid);
-                        datagrid.ItemsSource = invoiceLines;
-                    });
-
                      
                     foreach (var commission in salesperson.Earnings)
                     {
                         if(claimsByClient.ContainsKey(commission.FullName))
-                        {
+                        { 
+                            UpdateStatus("Commission invoice for " + salesperson.Name, UpdateType.Title);
+                            invoices.Dispatcher.Invoke(() => {
+                                datagrid = GetInvoiceGrid("Salesperson");
+                                invoices.Children.Add(datagrid);
+                                datagrid.ItemsSource = invoiceLines;
+                            });
+
+                           
+
+                           
+
                             var clientClaims = claimsByClient[commission.FullName];
 
                             foreach(var clientClaim in clientClaims)
                             {
+                                if (clientClaim.CheckAmount < 0)
+                                    continue;
+
                                 decimal companyPercent = GetCompanyPercentForCheck(clientClaim.FileNumber, clients[commission.FullName]);
                                 decimal companyAmount = companyPercent * clientClaim.CheckAmount;
                                 decimal salesPersonDue = (commission.Amount/100) * companyAmount;
+
+                                if (commission.AmountType == "Amount")
+                                    salesPersonDue = commission.Amount;
 
                                 invoiceLines.Add(new InvoiceLine()
                                 {
@@ -439,7 +455,9 @@ namespace TranSubroCommissions
                                     CheckAmount = clientClaim.CheckAmount.ToString("c"),
                                     SplitRate = (companyPercent * 100).ToString("#.000"),
                                     CommissionRate = commission.Amount.ToString("#.000"),
-                                    AmountDue = salesPersonDue.ToString("c")
+                                    AmountDue = salesPersonDue.ToString("c"),
+                                    CompanyAmount = companyPercent * clientClaim.CheckAmount,
+                                    IsFlatCommission = commission.AmountType == "Amount"
                                 });
  
                                 salesDueTotal += salesPersonDue;
@@ -448,23 +466,43 @@ namespace TranSubroCommissions
                             }
                         }
                     }
-                    invoiceLines.Add(new InvoiceLine()
-                    {
-                        LineNumber = "",
-                        FileNumber = "",
-                        Description = "",
-                        CheckAmount = "",
-                        AmountDue = ""
-                    });
-                    invoiceLines.Add(new InvoiceLine()
-                    {
-                        LineNumber = "",
-                        FileNumber = "",
-                        Description = "",
-                        CheckAmount = "Total Commissions",
-                        AmountDue = salesDueTotal.ToString("c")
-                    }); 
-                } 
+
+                    if(invoiceLines.Count > 0)
+                    { 
+                        qb.AddCommissionInvoice(new Invoice()
+                        {
+                            ClientName = salesperson.Name.Replace("{salesperson}", "").Trim() + " - COMMISSION",
+                            Lines = new List<InvoiceLine>(invoiceLines)
+                        });
+
+
+                        invoiceLines.Add(new InvoiceLine()
+                        {
+                            LineNumber = "",
+                            FileNumber = "",
+                            Description = "",
+                            CheckAmount = "",
+                            AmountDue = ""
+                        });
+
+                        invoiceLines.Add(new InvoiceLine()
+                        {
+                            LineNumber = "",
+                            FileNumber = "",
+                            Description = "",
+                            CheckAmount = "Total Commissions",
+                            AmountDue = salesDueTotal.ToString("c")
+                        });
+                        datagrid.Dispatcher.Invoke(() => {
+                            datagrid.Items.Refresh();
+                        });
+                    }
+
+                    
+
+                   
+
+                }
             }
         }
 

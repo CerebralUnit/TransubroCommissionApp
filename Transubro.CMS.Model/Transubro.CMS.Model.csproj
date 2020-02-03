@@ -50,6 +50,8 @@
     <Compile Include="Client.cs" />
     <Compile Include="ClientInvoice.cs" />
     <Compile Include="Deposit.cs" />
+    <Compile Include="InvoiceLine.cs" />
+    <Compile Include="Invoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SalesCommission.cs" />
     <Compile Include="SalesPerson.cs" />

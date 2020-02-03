@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Transubro.CMS.API;
 using Transubro.CMS.Model;
+using TranSubroCommissions.Properties;
 
 namespace TranSubroCommissions
 {
@@ -188,81 +190,98 @@ namespace TranSubroCommissions
                 IncomeAccounts = new List<string>() { "CONNECTING TO QUICKBOOKS... " };
 
             this.Loaded += delegate
-            { 
-                if(InsuranceCompanies.Count == 1) { 
-                    Task.Run(() => { 
-                        try
-                        {
-                            var qbService = new QuickbooksService();
- 
-                            InsuranceCompanies = qbService.GetInsuranceCompanies(); 
+            {
+                if (InsuranceCompanies.Count == 1)
+                    LoadInsuranceAccounts();
 
-                            ClaimChecks.Dispatcher.Invoke(() => {
-                                ClaimChecks.ItemsSource = claims;
-                                ClaimChecks.Items.Refresh();
-                            });
-                        }
-                        catch(Exception ex)
-                        {
-                            var st = new StackTrace(ex, true);
-                            // Get the top stack frame
-                            var frame = st.GetFrame(0);
-                            // Get the line number from the stack frame
-                            var line = frame.GetFileLineNumber();
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                MessageBox.Show("There was an error when trying to retrieve insurance companies: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
-                                 "Quickbooks Error",
-                                 MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-                            });
-                        } 
-                    });
-                }
-                if (IncomeAccounts.Count == 1)
-                {
-                    Task.Run(() => {
-                        try
-                        {
-                            var qbService = new QuickbooksService();
+                if (IncomeAccounts.Count == 1) 
+                    LoadIncomeAccounts();
 
-                            var incomeAccounts = qbService.GetIncomeAccounts();
-
-                            if(incomeAccounts != null)
-                            {
-                                IncomeAccounts = incomeAccounts.Select(x => x.FullName).ToList();
-                            }
-                            
- 
-                        }
-                        catch (Exception ex)
-                        {
-                            var st = new StackTrace(ex, true);
-                            // Get the top stack frame
-                            var frame = st.GetFrame(0);
-                            // Get the line number from the stack frame
-                            var line = frame.GetFileLineNumber();
-                            //this.Dispatcher.Invoke(() =>
-                            //{
-                            //    MessageBox.Show("There was an error when trying to retrieve income accounts: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
-                            //     "Quickbooks Error",
-                            //     MessageBoxButton.OK,
-                            //    MessageBoxImage.Error);
-                            //});
-                        }
-                    });
-                }
-
+                
             };
         }
 
+        private void LoadInsuranceAccounts()
+        {
+            Task.Run(() => {
+                try
+                {
+                    var qbService = new QuickbooksService(Settings.Default.CompanyFile);
+
+                    InsuranceCompanies = qbService.GetInsuranceCompanies();
+
+                    Task.Run(() =>
+                    {
+                        ClaimChecks.Dispatcher.Invoke(() =>
+                        {
+                            ClaimChecks.ItemsSource = claims;
+                            ClaimChecks.Items.Refresh();
+                        });
+                    });
+                }
+                catch (Exception ex)
+                {
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show("There was an error when trying to retrieve insurance companies: " + ex.Message + " - " + ex.TargetSite + " - line# " + line,
+                         "Quickbooks Error",
+                         MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    });
+                }
+            });
+        }
+
+        private void LoadIncomeAccounts()
+        {
+            Task.Run(() => {
+                try
+                {
+                    var qbService = new QuickbooksService(Settings.Default.CompanyFile);
+
+                    var incomeAccounts = qbService.GetIncomeAccounts();
+
+                    if (incomeAccounts != null) 
+                        IncomeAccounts = incomeAccounts.Select(x => x.FullName.Replace("Insurance Income:", "") + " (" + x.FullName + ")").ToList();
+
+                    Task.Run(() =>
+                    {
+                        ClaimChecks.Dispatcher.Invoke(() =>
+                        {
+                            ClaimChecks.ItemsSource = claims;
+                            ClaimChecks.Items.Refresh();
+                        });
+                    });
+                }
+                catch (Exception ex)
+                {
+                    var st = new StackTrace(ex, true);
+               
+                    var frame = st.GetFrame(0);
        
+                    var line = frame.GetFileLineNumber(); 
+                }
+            });
+        }
+
         private void AddCheckButton_Click(object sender, RoutedEventArgs e)
         {
             claims.Add(new Check());
             ClaimChecks.Items.Refresh();
         }
 
+        private void RefreshAccountsButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadInsuranceAccounts();
+            LoadIncomeAccounts();  
+        }
+
+        
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
@@ -281,7 +300,7 @@ namespace TranSubroCommissions
                 catch { }
             }
         }
-
+        private const string UNWRAP_INSURANCE_PATTERN = @"\([A-Za-z :\-,]+\)";
         private void CheckSubmit_Click(object sender, RoutedEventArgs e)
         {
             bool isValid = true; 
@@ -318,8 +337,18 @@ namespace TranSubroCommissions
                 }
             }
 
+
             List<Check> validClaims = claims.Where(x => !emptyClaims.Contains(x)).ToList();
 
+            foreach (var claim in validClaims)
+            {
+                var match = Regex.Match(claim.FromAccount, UNWRAP_INSURANCE_PATTERN);
+
+                if(match.Groups.Count > 0)
+                {
+                    claim.FromAccount = match.Groups[0].Value.Substring(1, match.Groups[0].Value.Length - 2);
+                }
+            }
             if (validClaims.Count == 0 || !isValid)
             {
                 MessageBoxResult result = MessageBox.Show("Please fill out all of the fields before submitting",
@@ -331,7 +360,7 @@ namespace TranSubroCommissions
             {
                 int numberAdded = validClaims.Count;
                  
-                bool processClaimsSucceeded = new QuickbooksService().ProcessCheckDeposits(claims);
+                bool processClaimsSucceeded = new QuickbooksService(Settings.Default.CompanyFile).ProcessCheckDeposits(claims);
 
                 if(processClaimsSucceeded)
                 { 

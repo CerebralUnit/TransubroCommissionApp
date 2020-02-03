@@ -12,15 +12,16 @@ namespace QBXML.NET
     public class QuickbooksClient
     {
         private string appName;
-        private const string companyFile = @"C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubroinc.qbw";
+        private string companyFile;
 
         protected static RequestProcessor2 MyQbXMLRP2;
         private static string ticket = null;
 
         public QuickbooksClient() { }
 
-        public QuickbooksClient(string applicationName)
+        public QuickbooksClient(string companyFileLocation, string applicationName)
         {
+            companyFile = companyFileLocation;
             appName = applicationName;
 
             if(MyQbXMLRP2 == null) 
@@ -211,13 +212,22 @@ namespace QBXML.NET
              
             return items;
         }
-        public string AddPurchaseOrder()
+
+        public PurchaseOrderAddResponse AddPurchaseOrder(PurchaseOrder purchaseOrder)
         {
-            var xml = new QBXMLConverter().GetPurchaseOrderXML();
+            var converter = new QBXMLConverter();
 
+            string xml = converter.ConvertPurchaseOrder(purchaseOrder);
 
-            return ProcessRequest(xml);
+            string purchaseOrderAddResponseXml = ProcessRequest(xml);
+
+            var response = converter.ConvertPurchaseOrderAddResponse(purchaseOrderAddResponseXml);
+
+            return response;
         }
+
+ 
+
         public string AddItem(object item)
         {
             var converter = new QBXMLConverter();

@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Transubro.CMS.API;
 using Transubro.CMS.Model;
+using TranSubroCommissions.Properties;
 
 namespace TranSubroCommissions
 {
@@ -60,7 +61,7 @@ namespace TranSubroCommissions
             
             this.Loaded += delegate
             {
-                allClients = new QuickbooksService().GetClients();
+                allClients = new QuickbooksService(Settings.Default.CompanyFile).GetClients();
                 DataGridCollection = CollectionViewSource.GetDefaultView(allClients);
                 DataGridCollection.Filter = new Predicate<object>(Filter);
                 ClientsList.ItemsSource = DataGridCollection;
