@@ -22,6 +22,8 @@ namespace Transubro.CMS.Model
 
         public decimal ClientPercentDecimal { get; set; }
 
+        public string Memo { get; set; }
+
         public decimal ClientDue
         {
             get

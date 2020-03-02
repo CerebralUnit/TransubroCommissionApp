@@ -51,6 +51,7 @@
     <Compile Include="Attributes\QuickbooksField.cs" />
     <Compile Include="Attributes\QuickbooksVendorAttribute.cs" />
     <Compile Include="Attributes\QuickbooksItemAttribute.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\DepositQueryResponse.cs" />
     <Compile Include="Model\DepositAddResponse.cs" />

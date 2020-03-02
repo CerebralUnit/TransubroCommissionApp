@@ -18,7 +18,11 @@ namespace Transubro.CMS.Model
         {
             get
             {
-                if (LossOfUseAmount > 0 && PropertyDamageAmount > 0)
+                if (
+                        (LossOfUseAmount > 0 && PropertyDamageAmount > 0) ||
+                        (LossOfUseAmount > 0 && OtherAmount > 0) ||
+                        (PropertyDamageAmount > 0 && OtherAmount > 0)
+                    )
                     memo = " COMBO";
                 else if (PropertyDamageAmount > 0)
                     memo = " PD";

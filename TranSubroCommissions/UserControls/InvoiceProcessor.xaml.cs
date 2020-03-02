@@ -309,7 +309,7 @@ namespace TranSubroCommissions
                      
                     invoices.Dispatcher.Invoke(() => {
                         datagrid = GetInvoiceGrid("Client");
-                        datagrid.Name = client.Key + "GridClientInvoices";
+                        datagrid.Name = client.Key.Replace("-", "") + "GridClientInvoices";
                         invoices.Children.Add(datagrid);
                         datagrid.ItemsSource = invoiceLines;
                     });

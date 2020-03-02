@@ -198,7 +198,8 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = check.PropertyDamageAmount.Value,
                         Description = check.PropertyDamageDescription,
-                        FileNumber = check.FileNumber + "-PD"
+                        FileNumber = check.FileNumber + "-PD",
+                        Memo = check.Memo
                     });
                 }
 
@@ -208,7 +209,8 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = check.LossOfUseAmount.Value,
                         Description = check.LossOfUseDescription,
-                        FileNumber = check.FileNumber + "-LOU"
+                        FileNumber = check.FileNumber + "-LOU",
+                        Memo = check.Memo
                     });
                 }
 
@@ -219,7 +221,8 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = check.OtherAmount.Value,
                         Description = check.OtherDescription,
-                        FileNumber = check.FileNumber + "-OTH"
+                        FileNumber = check.FileNumber + "-OTH",
+                        Memo = check.Memo
                     });
                 } 
 
@@ -229,7 +232,8 @@ namespace Transubro.CMS.API
                     {
                         CheckAmount = -3,
                         Description = "Closed file fee",
-                        FileNumber = check.FileNumber + "-CLS"
+                        FileNumber = check.FileNumber + "-CLS",
+                        Memo = check.Memo
                     }); 
                 }
             }

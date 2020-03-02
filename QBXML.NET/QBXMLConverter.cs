@@ -52,9 +52,9 @@ namespace QBXML.NET
                 if(template != null)
                 {
                     xml = template
-                            .Replace("{{Name}}", fields["Name"].ToString())
-                            .Replace("{{Description}}", fields["Description"].ToString())
-                            .Replace("{{Price}}", fields["Price"].ToString())
+                            .Replace("{{Name}}", fields["Name"].ToXmlString())
+                            .Replace("{{Description}}", fields["Description"].ToXmlString())
+                            .Replace("{{Price}}", fields["Price"].ToXmlString())
                             .Replace("{{AccountName}}", accountName);
                 } 
             }
@@ -84,10 +84,10 @@ namespace QBXML.NET
                 if (template != null)
                 {
                     xml = template
-                            .Replace("{{Name}}", fields["Name"].ToString())
-                            .Replace("{{Description}}", fields["Description"].ToString())
-                            .Replace("{{Price}}", fields["Price"].ToString())
-                            .Replace("{{AccountName}}", accountName);
+                            .Replace("{{Name}}", fields["Name"].ToXmlString())
+                            .Replace("{{Description}}", fields["Description"].ToXmlString())
+                            .Replace("{{Price}}", fields["Price"].ToXmlString())
+                            .Replace("{{AccountName}}", accountName.ToXmlString());
                 }
             }
 
@@ -139,13 +139,12 @@ namespace QBXML.NET
 
                 if (template != null)
                 {
-                    xml = template
-                            .Replace("{{Memo}}", fields["Memo"].ToString())
-                            .Replace("{{DepositLineEntityFullName}}", fields["DepositLineEntityFullName"].ToString())
-                            .Replace("{{FromAccount}}", fields["AccountRef"].ToString())
-                            .Replace("{{DepositLineMemo}}", fields["DepositLineMemo"].ToString())
-                            .Replace("{{CheckNumber}}", fields["CheckNumber"].ToString())
-                            .Replace("{{Amount}}", ((decimal)fields["Amount"]).ToString("F2"));
+                    xml = template 
+                            .Replace("{{DepositLineEntityFullName}}", fields["DepositLineEntityFullName"].ToXmlString())
+                            .Replace("{{FromAccount}}", fields["AccountRef"].ToXmlString())
+                            .Replace("{{DepositLineMemo}}", fields["Memo"].ToXmlString())
+                            .Replace("{{CheckNumber}}", fields["CheckNumber"].ToXmlString())
+                            .Replace("{{Amount}}", ((decimal)fields["Amount"]).ToString("F2").ToXmlString());
                 }
             }
 
@@ -167,8 +166,8 @@ namespace QBXML.NET
             if(template != null)
             {
                 xml = template
-                        .Replace("{{StartDate}}", startDate.ToString("yyyy-MM-dd")) 
-                        .Replace("{{EndDate}}", endDate.ToString("yyyy-MM-dd"));
+                        .Replace("{{StartDate}}", startDate.ToString("yyyy-MM-dd").ToXmlString()) 
+                        .Replace("{{EndDate}}", endDate.ToString("yyyy-MM-dd").ToXmlString());
             }
 
             return xml;
@@ -361,7 +360,7 @@ namespace QBXML.NET
             if (template != null)
             {
                 xml = template
-                        .Replace("{{AccountType}}", type);
+                        .Replace("{{AccountType}}", type.ToXmlString());
             }
 
             return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
@@ -375,7 +374,7 @@ namespace QBXML.NET
             if (template != null)
             {
                 xml = template
-                        .Replace("{{Name}}", name);
+                        .Replace("{{Name}}", name.ToXmlString());
             }
 
             return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
@@ -389,7 +388,7 @@ namespace QBXML.NET
             if (template != null)
             {
                 xml = template
-                        .Replace("{{Type}}", vendorType);
+                        .Replace("{{Type}}", vendorType.ToXmlString());
             }
 
             return GetTemplateText(EnvelopeTemplate).Replace("{{Requests}}", xml);
@@ -604,9 +603,9 @@ namespace QBXML.NET
             if(template != null)
             {
                 xml = template
-                        .Replace("{{ItemName}}", line.Item)
-                        .Replace("{{Quantity}}", line.Qty.ToString())
-                        .Replace("{{Rate}}", line.Rate.ToString());
+                        .Replace("{{ItemName}}", line.Item.ToXmlString())
+                        .Replace("{{Quantity}}", line.Qty.ToString().ToXmlString())
+                        .Replace("{{Rate}}", line.Rate.ToString().ToXmlString());
             }
 
             return xml;

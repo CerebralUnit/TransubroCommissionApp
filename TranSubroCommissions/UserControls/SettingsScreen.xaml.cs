@@ -41,6 +41,7 @@ namespace TranSubroCommissions
                 fileLocation.Text = sFileName;
 
                 Settings.Default.CompanyFile = sFileName;
+                Settings.Default.Save();
             } 
         }
     }
