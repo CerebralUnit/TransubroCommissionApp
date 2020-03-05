@@ -17,5 +17,7 @@ namespace QBXML.NET.Model
         public QuickbooksAccount Account { get; set; } 
         public PaymentMethod Method { get; set; }
         public QuickbooksEntity Entity { get; set; }
+
+        public string DepositDate { get; set; }
     }
 }

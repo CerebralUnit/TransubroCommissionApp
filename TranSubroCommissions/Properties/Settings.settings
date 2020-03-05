@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="CompanyFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubroinc.qbw</Value>
+      <Value Profile="(Default)">C:\Users\Annie\Documents\Intuit\Quickbooks\VM\Company Files\transubroerrortest.qbw</Value>
     </Setting>
   </Settings>
 </SettingsFile>

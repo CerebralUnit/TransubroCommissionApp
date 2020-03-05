@@ -25,7 +25,8 @@ namespace TranSubroCommissions.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Annie\\Documents\\Intuit\\Quickbooks\\VM\\Company Files\\transubroinc.qbw")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Annie\\Documents\\Intuit\\Quickbooks\\VM\\Company Files\\transubroerrortest.qb" +
+            "w")]
         public string CompanyFile {
             get {
                 return ((string)(this["CompanyFile"]));

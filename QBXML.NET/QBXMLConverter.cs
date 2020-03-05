@@ -529,6 +529,11 @@ namespace QBXML.NET
 
             XmlNodeList responseNode = xmlDoc.GetElementsByTagName("PurchaseOrderAddRs");
 
+            if(responseNode?[0]?.Attributes?["statusSeverity"]?.InnerText == "Error")
+            {
+                throw new Exception("Quickbooks Exception: " + responseNode?[0]?.Attributes?["statusMessage"]?.InnerText);
+            }
+
             XmlNodeList purchaseOrderNode = xmlDoc.GetElementsByTagName("PurchaseOrderRet");
 
             XmlNodeList purchaseOrderLineNodes = xmlDoc.GetElementsByTagName("PurchaseOrderLineRet");
@@ -843,6 +848,7 @@ namespace QBXML.NET
                             Memo = lineNode["Memo"]?.InnerText,
                             CheckNumber = lineNode["CheckNumber"]?.InnerText,
                             Amount = decimal.Parse(lineNode["Amount"]?.InnerText),
+                            DepositDate = depositNode["TxnDate"]?.InnerText,
                             Account = new QuickbooksAccount()
                             {
                                 ListId = lineNode["AccountRef"]["ListID"]?.InnerText,

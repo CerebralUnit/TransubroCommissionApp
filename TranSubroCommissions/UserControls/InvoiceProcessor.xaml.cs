@@ -2,6 +2,7 @@
 using QBXML.NET.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -101,6 +102,7 @@ namespace TranSubroCommissions
             var splitType = recipientType == "Salesperson" ? "TS" : "Client";
 
             var grid = new DataGrid();
+           
             grid.PreviewMouseWheel += Grid_PreviewMouseWheel;
             grid.IsReadOnly = true;
             grid.AutoGenerateColumns = false;
@@ -185,7 +187,7 @@ namespace TranSubroCommissions
                 }
                 else
                 {
-                    filenumber = ParseFileNumber(check.Memo).FirstOrDefault() ?? "NO MEMO";
+                    filenumber = ParseFileNumber(check.Memo).FirstOrDefault() ?? "BADLY FORMATTED MEMO";
                 }
                  
                 if (!response.ContainsKey(filenumber))
@@ -232,7 +234,7 @@ namespace TranSubroCommissions
             var parsed = ParseFileNumber(memo);
 
             if (parsed.Count == 0)
-                return "NO MEMO";
+                return "BADLY FORMATTED MEMO";
 
             return parsed[0] + "-" + parsed[1];
         }
@@ -258,9 +260,24 @@ namespace TranSubroCommissions
                  
                 var checksByClient = GetChecksByClient(checks);
                  
-                if (checksByClient.Any(x => x.Key == "NO MEMO")) 
-                    ShowWarning("One or more deposits was missing a required Memo Line. The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU)"); 
-                 
+                if (checksByClient.Any(x => x.Key == "NO MEMO"))
+                {
+                    var noMemoChecks = checksByClient["NO MEMO"];
+
+                    var noMemoLine = String.Join(Environment.NewLine, noMemoChecks.Select(x => x.DepositDate + " Check#" + x.CheckNumber));
+
+                    ShowWarning("The following cheks were missing a required Memo Line:" + noMemoLine + Environment.NewLine + " The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU, TR-NV-042419-12345 LOU)");
+                }
+
+                if(checksByClient.Any(x => x.Key == "BADLY FORMATTED MEMO"))
+                {
+                    var badMemoChecks = checksByClient["BADLY FORMATTED MEMO"];
+                    var badMemoLine = String.Join(Environment.NewLine, badMemoChecks.Select(x => x.DepositDate + " Check#" + x.CheckNumber + " Memo: " + x.Memo));
+
+                    ShowWarning("The following checks had a badly formatted memo: " + badMemoLine + Environment.NewLine + " The memo should be formatted CLIENT-DATE TYPE (e.g. TRM-042419 LOU, TR-NV-042419-12345 LOU)");
+
+                }
+
                 UpdateStatus("Gathering clients", UpdateType.Alert);
 
                 List<string> clientNames = checksByClient.Keys.Distinct().ToList();
@@ -279,9 +296,21 @@ namespace TranSubroCommissions
                 List<Claim> claims = qb.SearchClaims(fileNumbers, startDate.Value, endDate.Value);
                 
                 Dictionary<string, List<Claim>> claimsByClient = GetClaimsByClient(claims);
+ 
+                if (claimsByClient.Any(x => x.Key == "NO FILENUMBER"))
+                {
+                    var badClaims = claimsByClient["NO FILENUMBER"];
 
-                if (claimsByClient.Any(x => x.Key == "NO FILENUMBER")) 
-                    ShowWarning("One or more claim items had an improperly formatted name."); 
+                    var badClaimsLine = String.Join(Environment.NewLine, badClaims.Select(
+                        x =>  x.Description + " File#" + x.FileNumber + " Memo: " + x.Memo
+                    ));
+
+                    ShowWarning("The following claim items had a badly formatted memo: " + badClaimsLine + 
+                        Environment.NewLine + 
+                        " The memo should be formatted CLIENT-DATE-TYPE (e.g. TRM-042419-LOU, TR-NV-042419-12345-LOU)");
+
+                }
+
 
                 UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
 
@@ -411,7 +440,7 @@ namespace TranSubroCommissions
                 foreach (var salesperson in salespersons)
                 {
                     DataGrid datagrid = null;
-                    var invoiceLines = new List<InvoiceLine>();
+                    var invoiceLines = new ObservableCollection<InvoiceLine>();
                     
                     int line = 1;
    
@@ -423,8 +452,11 @@ namespace TranSubroCommissions
                         if(claimsByClient.ContainsKey(commission.FullName))
                         { 
                             UpdateStatus("Commission invoice for " + salesperson.Name, UpdateType.Title);
+
                             invoices.Dispatcher.Invoke(() => {
                                 datagrid = GetInvoiceGrid("Salesperson");
+
+                                datagrid.Name = salesperson.Name.Replace("-", "").Replace("{salesperson}", "").Replace(" ", "") + "SPClientInvoices";
                                 invoices.Children.Add(datagrid);
                                 datagrid.ItemsSource = invoiceLines;
                             });
@@ -447,19 +479,26 @@ namespace TranSubroCommissions
                                 if (commission.AmountType == "Amount")
                                     salesPersonDue = commission.Amount;
 
-                                invoiceLines.Add(new InvoiceLine()
-                                {
-                                    LineNumber = line.ToString(),
-                                    FileNumber = clientClaim.FileNumber,
-                                    Description = clientClaim.Description,
-                                    CheckAmount = clientClaim.CheckAmount.ToString("c"),
-                                    SplitRate = (companyPercent * 100).ToString("#.000"),
-                                    CommissionRate = commission.Amount.ToString("#.000"),
-                                    AmountDue = salesPersonDue.ToString("c"),
-                                    CompanyAmount = companyPercent * clientClaim.CheckAmount,
-                                    IsFlatCommission = commission.AmountType == "Amount"
+                              
+                                datagrid.Dispatcher.Invoke(() => {
+
+                                    invoiceLines.Add(new InvoiceLine()
+                                    {
+                                        LineNumber = line.ToString(),
+                                        FileNumber = clientClaim.FileNumber,
+                                        Description = clientClaim.Description,
+                                        CheckAmount = clientClaim.CheckAmount.ToString("c"),
+                                        SplitRate = (companyPercent * 100).ToString("#.000"),
+                                        CommissionRate = commission.Amount.ToString("#.000"),
+                                        AmountDue = salesPersonDue.ToString("c"),
+                                        CompanyAmount = companyPercent * clientClaim.CheckAmount,
+                                        IsFlatCommission = commission.AmountType == "Amount"
+                                    });
+
+                                    datagrid.Items.Refresh();
                                 });
- 
+
+
                                 salesDueTotal += salesPersonDue;
                                 invoiceTotal += clientClaim.CheckAmount;
                                 line++; 
@@ -476,32 +515,31 @@ namespace TranSubroCommissions
                         });
 
 
-                        invoiceLines.Add(new InvoiceLine()
-                        {
-                            LineNumber = "",
-                            FileNumber = "",
-                            Description = "",
-                            CheckAmount = "",
-                            AmountDue = ""
-                        });
+                       
 
-                        invoiceLines.Add(new InvoiceLine()
-                        {
-                            LineNumber = "",
-                            FileNumber = "",
-                            Description = "",
-                            CheckAmount = "Total Commissions",
-                            AmountDue = salesDueTotal.ToString("c")
-                        });
                         datagrid.Dispatcher.Invoke(() => {
+
+                            invoiceLines.Add(new InvoiceLine()
+                            {
+                                LineNumber = "",
+                                FileNumber = "",
+                                Description = "",
+                                CheckAmount = "",
+                                AmountDue = ""
+                            });
+
+                            invoiceLines.Add(new InvoiceLine()
+                            {
+                                LineNumber = "",
+                                FileNumber = "",
+                                Description = "",
+                                CheckAmount = "Total Commissions",
+                                AmountDue = salesDueTotal.ToString("c")
+                            });
+
                             datagrid.Items.Refresh();
                         });
-                    }
-
-                    
-
-                   
-
+                    } 
                 }
             }
         }

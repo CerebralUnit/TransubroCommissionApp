@@ -7,6 +7,9 @@
         <FromTxnDate >{{StartDate}}</FromTxnDate>
         <ToTxnDate >{{EndDate}}</ToTxnDate>
       </TxnDateRangeFilter>
+      <AccountFilter>
+        <FullName>Operating Account - 3363</FullName> 
+      </AccountFilter>
       <IncludeLineItems >true</IncludeLineItems>
     </DepositQueryRq>
   </QBXMLMsgsRq>
