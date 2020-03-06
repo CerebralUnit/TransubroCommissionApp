@@ -27,150 +27,77 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class AddClaims : InjectableUserControl
     { 
-        public List<Check> claims = new List<Check>() { new Check() };
+        //public List<Check> claims = new List<Check>() { new Check() };
 
-        //public List<Check> claims = new List<Check>(){
-        //    new Check()
-        //    {
-                
-        //        CheckNumber = "0923842",
-        //        FileNumber = "GMC-010120-1111",
-        //        FromAccount = "Insurance Income:GMC",
-        //        LossOfUseAmount = 5296.440m,
-        //        LossOfUseDescription = "Loss of use at 100% for 5 days", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = 2422.00m,
-        //        PropertyDamageDescription = "Property damage at 50% for 5 days",
-        //        ReceivedFrom = "Allstate Insurance Co.",
-        //        To = null,
-                
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "00203085028",
-        //        FileNumber = "NEX-MO-010120",
-        //        FromAccount = "Insurance Income:NEX-AZ",
-        //        LossOfUseAmount = 740.00m,
-        //        LossOfUseDescription = "Loss of use at 80% for 3 days", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = null,
-        //        PropertyDamageDescription = null,
-        //        ReceivedFrom = "Encompass Insurance",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "123515352",
-        //        FileNumber = "NEX-MO-010120-1111",
-        //        FromAccount = "Insurance Income:NEX-MO",
-        //        LossOfUseAmount = null,
-        //        LossOfUseDescription = null, 
-        //        OtherAmount = 1250.00m,
-        //        OtherDescription = "Arbitration settlement",
-        //        PropertyDamageAmount = null,
-        //        PropertyDamageDescription = null,
-        //        ReceivedFrom = "AAA",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "67187173",
-        //        FileNumber = "ACE-010120-1111",
-        //        FromAccount = "Insurance Income:ACE",
-        //        LossOfUseAmount = 22348.00m,
-        //        LossOfUseDescription = "Loss of use for 30 days at 100%", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = 422.00m,
-        //        PropertyDamageDescription = "Property damage at 10%",
-        //        ReceivedFrom = "Country Wide Insurance",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "44423527",
-        //        FileNumber = "PTS-010120-1111",
-        //        FromAccount = "Insurance Income:PTS",
-        //        LossOfUseAmount = null,
-        //        LossOfUseDescription = null, 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = 6238.220m,
-        //        PropertyDamageDescription = "Property damage at 100%",
-        //        ReceivedFrom = "GEICO Indemnity Ins. Co.",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "6123612361",
-        //        FileNumber = "NEX-AZ-010120-1111",
-        //        FromAccount = "Insurance Income:NEX-CT",
-        //        LossOfUseAmount = 511.900m,
-        //        LossOfUseDescription = "Loss of use at 50% for 12 days", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = null,
-        //        PropertyDamageDescription = null,
-        //        ReceivedFrom = "USAA Casualty Insurance Co.",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "2136126",
-        //        FileNumber = "MPC-010120-1111",
-        //        FromAccount = "Insurance Income:MPC",
-        //        LossOfUseAmount = 2480.00m,
-        //        LossOfUseDescription = "Loss of use at 100% for 11 days", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = 400.00m,
-        //        PropertyDamageDescription = "Property Damage settlement 400",
-        //        ReceivedFrom = "Selective Way Insurance Co.",
-        //        To = null,  
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "11126362",
-        //        FileNumber = "COCH-010120-1111",
-        //        FromAccount = "Insurance Income:COCH-OH",
-        //        LossOfUseAmount = null,
-        //        LossOfUseDescription = "", 
-        //        OtherAmount = null,
-        //        OtherDescription = null,
-        //        PropertyDamageAmount = 182.120m,
-        //        PropertyDamageDescription = "Property damage at 12%",
-        //        ReceivedFrom = "Zurich American Insurance Company",
-        //        To = null, 
-        //    },
-        //    new Check()
-        //        {
-                    
-        //        CheckNumber = "623621361",
-        //        FileNumber = "JO-010120-1111",
-        //        FromAccount = "Insurance Income:JO -Jofaz Transportation",
-        //        LossOfUseAmount = null,
-        //        LossOfUseDescription = null,
-               
-        //        OtherAmount = 2000.00m,
-        //        OtherDescription = "Settlement",
-        //        PropertyDamageAmount = null,
-        //        PropertyDamageDescription = null,
-        //        ReceivedFrom = "Wesco Insurance Co.",
-        //        To = null, 
-        //    }
-        //};
+        public List<Check> claims = new List<Check>(){
+            new Check()
+            {
+
+                CheckNumber = "0005017326",
+                FileNumber = "STA-PA-111219-191162699",
+                FromAccount = "STA-PA (Insurance Income:STA-PA)",
+                LossOfUseAmount = 1500.000m,
+                LossOfUseDescription = "Loss of use at 100% for 5 days", 
+                OtherAmount = null,
+                OtherDescription = null,
+                PropertyDamageAmount = null,
+                PropertyDamageDescription = null,
+                ReceivedFrom = "Motorists Insurance",
+                To = null,
+                IsClosed = true
+
+            },
+            new Check()
+                {
+
+                CheckNumber = "320008828",
+                FileNumber = "MPC-021119-3390",
+                FromAccount = "MPC (Insurance Income:MPC)",
+                LossOfUseAmount = 1561.64m,
+                LossOfUseDescription = "Loss of use at 80% for 3 days", 
+                OtherAmount = null,
+                OtherDescription = null,
+                PropertyDamageAmount = 1000m,
+                PropertyDamageDescription = "Property damage at 10%",
+                ReceivedFrom = "American Country",
+                To = null,
+                IsClosed = true
+            },
+            new Check()
+                {
+
+                CheckNumber = "0407602217",
+                FileNumber = "41-010920-63",
+                FromAccount = "41 (Insurance Income:41)",
+                LossOfUseAmount = null,
+                LossOfUseDescription = null, 
+                OtherAmount = 1087.50m,
+                OtherDescription = "Arbitration settlement",
+                PropertyDamageAmount = 2800m,
+                PropertyDamageDescription = "Property damage at 50%",
+                ReceivedFrom = "National General",
+                To = null, 
+            },
+            new Check()
+                {
+
+                CheckNumber = "1000526204",
+                FileNumber = "YCC-102819",
+                FromAccount = "YCC     Yellow Cab of Columbus (Insurance Income:YCC     Yellow Cab of Columbus)",
+                LossOfUseAmount = 371.44m,
+                LossOfUseDescription = "Loss of use for 30 days at 100%", 
+                OtherAmount = null,
+                OtherDescription = null,
+                PropertyDamageAmount = null,
+                PropertyDamageDescription = null,
+                ReceivedFrom = "National General",
+                To = null, 
+                IsClosed = true
+            } 
+        };
 
 
-    public static List<string> InsuranceCompanies { get; set; }
+        public static List<string> InsuranceCompanies { get; set; }
         public static List<string> IncomeAccounts { get; set; }
 
         private bool insuranceDropdownOpen = false;
@@ -222,7 +149,7 @@ namespace TranSubroCommissions
                 catch (Exception ex)
                 {
                     var st = new StackTrace(ex, true);
-                    // Get the top stack frame
+                     //Get the top stack frame
                     var frame = st.GetFrame(0);
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
@@ -300,7 +227,7 @@ namespace TranSubroCommissions
                 catch { }
             }
         }
-        private const string UNWRAP_INSURANCE_PATTERN = @"\([A-Za-z :\-,]+\)";
+        private const string UNWRAP_INSURANCE_PATTERN = @"\([A-Za-z0-9 :\-,]+\)";
         private void CheckSubmit_Click(object sender, RoutedEventArgs e)
         {
             bool isValid = true; 
@@ -343,11 +270,13 @@ namespace TranSubroCommissions
             foreach (var claim in validClaims)
             {
                 var match = Regex.Match(claim.FromAccount, UNWRAP_INSURANCE_PATTERN);
-
-                if(match.Groups.Count > 0)
+                try
                 {
-                    claim.FromAccount = match.Groups[0].Value.Substring(1, match.Groups[0].Value.Length - 2);
+                    if (match.Groups.Count > 0)
+                        claim.FromAccount = match.Groups[0].Value.Substring(1, match.Groups[0].Value.Length - 2);
                 }
+                catch { }
+                
             }
             if (validClaims.Count == 0 || !isValid)
             {

@@ -607,10 +607,22 @@ namespace QBXML.NET
 
             if(template != null)
             {
-                xml = template
+                //there's a negative number in disbursements, which POs don't allow
+                if(line.Item == "Disbursements")
+                {
+                    xml = template
+                        .Replace("{{ItemName}}", line.Item.ToXmlString())
+                        .Replace("{{Rate}}", line.Qty.ToString().ToXmlString())
+                        .Replace("{{Quantity}}", line.Rate.ToString().ToXmlString());
+                }
+                else
+                {
+                    xml = template
                         .Replace("{{ItemName}}", line.Item.ToXmlString())
                         .Replace("{{Quantity}}", line.Qty.ToString().ToXmlString())
                         .Replace("{{Rate}}", line.Rate.ToString().ToXmlString());
+                }
+                
             }
 
             return xml;

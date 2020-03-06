@@ -128,8 +128,8 @@ namespace Transubro.CMS.API
             {
                 Description = line.Description, 
                 Item = line.FileNumber,
-                Qty = decimal.Parse(line.CheckAmount.Replace("$", "").Replace(",","")),
-                Rate = decimal.Parse(line.SplitRate.Replace("$", "").Replace(",", ""))/100
+                Qty = !String.IsNullOrWhiteSpace(line.CheckAmount) ? decimal.Parse(line.CheckAmount.Replace("$", "").Replace(",","")) : 0,
+                Rate = !String.IsNullOrWhiteSpace(line.SplitRate) ? decimal.Parse(line.SplitRate.Replace("$", "").Replace(",", ""))/100 : 0
             };
         }
 

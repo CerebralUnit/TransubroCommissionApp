@@ -28,7 +28,7 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class InvoiceProcessor : InjectableUserControl
     {
-        private const string FILENUMBER_SPLITTER = @"^([A-Z]+(?:[~-][A-Z]{1,3})?)-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Z]{2,5})?$";
+        private const string FILENUMBER_SPLITTER = @"^([A-Z0-9]+(?:[~-][A-Z]{1,3})?)-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Z]{2,5})?$";
 
         public enum UpdateType
         {
@@ -367,7 +367,7 @@ namespace TranSubroCommissions
                             invoiceLines.Add(new InvoiceLine()
                             {
                                 LineNumber = line.ToString(),
-                                FileNumber = "Disbursement",
+                                FileNumber = "Disbursements",
                                 Description = claim.Description,
                                 CheckAmount = String.Format(culture, "{0:C}", dueClient),
                                 AmountDue = String.Format(culture, "{0:C}", dueClient),
@@ -435,25 +435,27 @@ namespace TranSubroCommissions
                 } 
 
                 UpdateStatus("Client invoices complete.", UpdateType.Alert); 
-                UpdateStatus("Building salesperson invoices", UpdateType.Alert); 
-
+                UpdateStatus("Building salesperson invoices", UpdateType.Alert);
+                int salespersonCount = 0;
                 foreach (var salesperson in salespersons)
                 {
                     DataGrid datagrid = null;
                     var invoiceLines = new ObservableCollection<InvoiceLine>();
-                    
+
                     int line = 1;
-   
+
                     decimal invoiceTotal = 0;
                     decimal salesDueTotal = 0;
-                     
+
                     foreach (var commission in salesperson.Earnings)
                     {
-                        if(claimsByClient.ContainsKey(commission.FullName))
-                        { 
+                        if (claimsByClient.ContainsKey(commission.FullName))
+                        {
+                            salespersonCount++;
                             UpdateStatus("Commission invoice for " + salesperson.Name, UpdateType.Title);
 
-                            invoices.Dispatcher.Invoke(() => {
+                            invoices.Dispatcher.Invoke(() =>
+                            {
                                 datagrid = GetInvoiceGrid("Salesperson");
 
                                 datagrid.Name = salesperson.Name.Replace("-", "").Replace("{salesperson}", "").Replace(" ", "") + "SPClientInvoices";
@@ -461,26 +463,27 @@ namespace TranSubroCommissions
                                 datagrid.ItemsSource = invoiceLines;
                             });
 
-                           
 
-                           
+
+
 
                             var clientClaims = claimsByClient[commission.FullName];
 
-                            foreach(var clientClaim in clientClaims)
+                            foreach (var clientClaim in clientClaims)
                             {
                                 if (clientClaim.CheckAmount < 0)
                                     continue;
 
                                 decimal companyPercent = GetCompanyPercentForCheck(clientClaim.FileNumber, clients[commission.FullName]);
                                 decimal companyAmount = companyPercent * clientClaim.CheckAmount;
-                                decimal salesPersonDue = (commission.Amount/100) * companyAmount;
+                                decimal salesPersonDue = (commission.Amount / 100) * companyAmount;
 
                                 if (commission.AmountType == "Amount")
                                     salesPersonDue = commission.Amount;
 
-                              
-                                datagrid.Dispatcher.Invoke(() => {
+
+                                datagrid.Dispatcher.Invoke(() =>
+                                {
 
                                     invoiceLines.Add(new InvoiceLine()
                                     {
@@ -501,13 +504,13 @@ namespace TranSubroCommissions
 
                                 salesDueTotal += salesPersonDue;
                                 invoiceTotal += clientClaim.CheckAmount;
-                                line++; 
+                                line++;
                             }
                         }
                     }
 
-                    if(invoiceLines.Count > 0)
-                    { 
+                    if (invoiceLines.Count > 0)
+                    {
                         qb.AddCommissionInvoice(new Invoice()
                         {
                             ClientName = salesperson.Name.Replace("{salesperson}", "").Trim() + " - COMMISSION",
@@ -515,9 +518,10 @@ namespace TranSubroCommissions
                         });
 
 
-                       
 
-                        datagrid.Dispatcher.Invoke(() => {
+
+                        datagrid.Dispatcher.Invoke(() =>
+                        {
 
                             invoiceLines.Add(new InvoiceLine()
                             {
@@ -539,8 +543,14 @@ namespace TranSubroCommissions
 
                             datagrid.Items.Refresh();
                         });
-                    } 
+                    }
                 }
+
+                UpdateStatus(" ", UpdateType.Text);
+                UpdateStatus(" ", UpdateType.Text);
+                UpdateStatus($"{clients.Count} client invoices created", UpdateType.Alert);
+                UpdateStatus($"{salespersonCount} commission invoices created", UpdateType.Alert);
+                UpdateStatus("Completed Successfully", UpdateType.Alert);
             }
         }
 
