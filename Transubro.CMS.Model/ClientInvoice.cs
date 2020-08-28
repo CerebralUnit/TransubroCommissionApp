@@ -14,5 +14,6 @@ namespace Transubro.CMS.Model
         }
         public string Client { get; set; }
         public List<Claim> Claims { get; set; }
+        public List<QBXML.NET.Model.DepositLine> Checks { get; set; }
     }
 }

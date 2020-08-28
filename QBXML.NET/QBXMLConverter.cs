@@ -492,10 +492,16 @@ namespace QBXML.NET
                 var salesPurchaseNode = node["SalesOrPurchase"];
 
                 var item = new T();
-                 
+
+                decimal price = 0;
+
+                
+
                 propertyMap["Name"].SetValue(item, node["Name"]?.InnerText);
                 propertyMap["Description"].SetValue(item, salesPurchaseNode["Desc"]?.InnerText);
-                propertyMap["Price"].SetValue(item, decimal.Parse(salesPurchaseNode["Price"]?.InnerText));
+
+                if(decimal.TryParse(salesPurchaseNode["Price"]?.InnerText, out price)) 
+                    propertyMap["Price"].SetValue(item, price);  
 
                 response.Add(item);
             }
@@ -863,18 +869,18 @@ namespace QBXML.NET
                             DepositDate = depositNode["TxnDate"]?.InnerText,
                             Account = new QuickbooksAccount()
                             {
-                                ListId = lineNode["AccountRef"]["ListID"]?.InnerText,
-                                FullName = lineNode["AccountRef"]["FullName"]?.InnerText
+                                ListId = lineNode["AccountRef"]?["ListID"]?.InnerText,
+                                FullName = lineNode["AccountRef"]?["FullName"]?.InnerText
                             },
                             Entity = new QuickbooksEntity()
                             {
-                                ListId = lineNode["EntityRef"]["ListID"]?.InnerText,
-                                FullName = lineNode["EntityRef"]["FullName"]?.InnerText
+                                ListId = lineNode["EntityRef"]?["ListID"]?.InnerText,
+                                FullName = lineNode["EntityRef"]?["FullName"]?.InnerText
                             },
                             Method = new PaymentMethod()
                             {
-                                ListId = lineNode["PaymentMethodRef"]["ListID"]?.InnerText,
-                                FullName = lineNode["PaymentMethodRef"]["FullName"]?.InnerText
+                                ListId = lineNode["PaymentMethodRef"]?["ListID"]?.InnerText,
+                                FullName = lineNode["PaymentMethodRef"]?["FullName"]?.InnerText
                             }
                         }); 
                     }

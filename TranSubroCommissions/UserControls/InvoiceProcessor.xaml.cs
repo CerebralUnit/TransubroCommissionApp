@@ -28,7 +28,7 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class InvoiceProcessor : InjectableUserControl
     {
-        private const string FILENUMBER_SPLITTER = @"^([A-Z0-9]+(?:[~-][A-Z]{1,3})?)-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Z]{2,5})?$";
+        private const string FILENUMBER_SPLITTER = @"^([A-Z0-9]+(?:[~-][A-Z]{1,3})?)+-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Za-z ]+)?$";
 
         public enum UpdateType
         {
@@ -311,7 +311,19 @@ namespace TranSubroCommissions
 
                 }
 
+                foreach(var claimItem in claims)
+                { 
+                    if (claimItem.CheckAmount == 0)
+                    {
+                        var filenumber = claimItem.FileNumber.ToLower();
+                        var matchingDeposit = checks.FirstOrDefault(x => x.Memo.ToLower().Contains(filenumber) || filenumber.Contains(x.Memo.ToLower()));
 
+                        if (matchingDeposit != null)
+                            claimItem.CheckAmount = matchingDeposit.Amount;
+                        else
+                            Console.WriteLine("Missing");
+                    }
+                }
                 UpdateStatus("Retrieving salesperson commission list", UpdateType.Alert); 
 
                 List<Employee> salespersons = qbc.SearchEmployeesByName("{salesperson}");
@@ -342,11 +354,13 @@ namespace TranSubroCommissions
                         invoices.Children.Add(datagrid);
                         datagrid.ItemsSource = invoiceLines;
                     });
-                     
+
                     var invoice = new ClientInvoice()
                     {
                         Client = client.Key,
-                        Claims = claimsByClient[client.Key]
+                        Claims = claimsByClient[client.Key],
+                        Checks = checksByClient[client.Key]
+
                     };
                      
                     int line = 1;

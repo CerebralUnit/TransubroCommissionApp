@@ -30,70 +30,70 @@ namespace TranSubroCommissions
         //public List<Check> claims = new List<Check>() { new Check() };
 
         public List<Check> claims = new List<Check>(){
-            new Check()
-            {
+            //new Check()
+            //{
 
-                CheckNumber = "0005017326",
-                FileNumber = "STA-PA-111219-191162699",
-                FromAccount = "STA-PA (Insurance Income:STA-PA)",
-                LossOfUseAmount = 1500.000m,
-                LossOfUseDescription = "Loss of use at 100% for 5 days", 
-                OtherAmount = null,
-                OtherDescription = null,
-                PropertyDamageAmount = null,
-                PropertyDamageDescription = null,
-                ReceivedFrom = "Motorists Insurance",
-                To = null,
-                IsClosed = true
+            //    CheckNumber = "0005017326",
+            //    FileNumber = "STA-PA-111219-191162699",
+            //    FromAccount = "STA-PA (Insurance Income:STA-PA)",
+            //    LossOfUseAmount = 1500.000m,
+            //    LossOfUseDescription = "Loss of use at 100% for 5 days", 
+            //    OtherAmount = null,
+            //    OtherDescription = null,
+            //    PropertyDamageAmount = null,
+            //    PropertyDamageDescription = null,
+            //    ReceivedFrom = "Motorists Insurance",
+            //    To = null,
+            //    IsClosed = true
 
-            },
-            new Check()
-                {
+            //},
+            //new Check()
+            //    {
 
-                CheckNumber = "320008828",
-                FileNumber = "MPC-021119-3390",
-                FromAccount = "MPC (Insurance Income:MPC)",
-                LossOfUseAmount = 1561.64m,
-                LossOfUseDescription = "Loss of use at 80% for 3 days", 
-                OtherAmount = null,
-                OtherDescription = null,
-                PropertyDamageAmount = 1000m,
-                PropertyDamageDescription = "Property damage at 10%",
-                ReceivedFrom = "American Country",
-                To = null,
-                IsClosed = true
-            },
-            new Check()
-                {
+            //    CheckNumber = "320008828",
+            //    FileNumber = "MPC-021119-3390",
+            //    FromAccount = "MPC (Insurance Income:MPC)",
+            //    LossOfUseAmount = 1561.64m,
+            //    LossOfUseDescription = "Loss of use at 80% for 3 days", 
+            //    OtherAmount = null,
+            //    OtherDescription = null,
+            //    PropertyDamageAmount = 1000m,
+            //    PropertyDamageDescription = "Property damage at 10%",
+            //    ReceivedFrom = "American Country",
+            //    To = null,
+            //    IsClosed = true
+            //},
+            //new Check()
+            //    {
 
-                CheckNumber = "0407602217",
-                FileNumber = "41-010920-63",
-                FromAccount = "41 (Insurance Income:41)",
-                LossOfUseAmount = null,
-                LossOfUseDescription = null, 
-                OtherAmount = 1087.50m,
-                OtherDescription = "Arbitration settlement",
-                PropertyDamageAmount = 2800m,
-                PropertyDamageDescription = "Property damage at 50%",
-                ReceivedFrom = "National General",
-                To = null, 
-            },
-            new Check()
-                {
+            //    CheckNumber = "0407602217",
+            //    FileNumber = "41-010920-63",
+            //    FromAccount = "41 (Insurance Income:41)",
+            //    LossOfUseAmount = null,
+            //    LossOfUseDescription = null, 
+            //    OtherAmount = 1087.50m,
+            //    OtherDescription = "Arbitration settlement",
+            //    PropertyDamageAmount = 2800m,
+            //    PropertyDamageDescription = "Property damage at 50%",
+            //    ReceivedFrom = "National General",
+            //    To = null, 
+            //},
+            //new Check()
+            //    {
 
-                CheckNumber = "1000526204",
-                FileNumber = "YCC-102819",
-                FromAccount = "YCC     Yellow Cab of Columbus (Insurance Income:YCC     Yellow Cab of Columbus)",
-                LossOfUseAmount = 371.44m,
-                LossOfUseDescription = "Loss of use for 30 days at 100%", 
-                OtherAmount = null,
-                OtherDescription = null,
-                PropertyDamageAmount = null,
-                PropertyDamageDescription = null,
-                ReceivedFrom = "National General",
-                To = null, 
-                IsClosed = true
-            } 
+            //    CheckNumber = "1000526204",
+            //    FileNumber = "YCC-102819",
+            //    FromAccount = "YCC     Yellow Cab of Columbus (Insurance Income:YCC     Yellow Cab of Columbus)",
+            //    LossOfUseAmount = 371.44m,
+            //    LossOfUseDescription = "Loss of use for 30 days at 100%", 
+            //    OtherAmount = null,
+            //    OtherDescription = null,
+            //    PropertyDamageAmount = null,
+            //    PropertyDamageDescription = null,
+            //    ReceivedFrom = "National General",
+            //    To = null, 
+            //    IsClosed = true
+            //} 
         };
 
 
