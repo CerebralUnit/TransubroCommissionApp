@@ -28,8 +28,10 @@ namespace TranSubroCommissions
     /// </summary>
     public partial class InvoiceProcessor : InjectableUserControl
     {
-        private const string FILENUMBER_SPLITTER = @"^([A-Z0-9]+(?:[~-][A-Z]{1,3})?)+-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Za-z ]+)?$";
+        //private const string FILENUMBER_SPLITTER = @"^([A-Z0-9]+(?:[~-][A-Z]{1,3})?)+-([0-9]{6}(?:-[A-Za-z0-9]+)?)(?:[ \-])?([A-Za-z ]+)?$";
 
+
+        private const string FILENUMBER_SPLITTER = @"^([A-Za-z0-9]+(?:[~-][A-Za-z0-9]{1,3})?)+-([0-9]{6})-?((?:[A-Za-z0-9-]+)?)(?:[ \-])?([A-Za-z ]+)?$";
         public enum UpdateType
         {
             Text,
@@ -236,7 +238,7 @@ namespace TranSubroCommissions
             if (parsed.Count == 0)
                 return "BADLY FORMATTED MEMO";
 
-            return parsed[0] + "-" + parsed[1];
+            return parsed[0].ToUpper() + "-" + parsed[1];
         }
 
         private void ProcessInvoices(DateTime? startDate, DateTime? endDate)
@@ -367,22 +369,24 @@ namespace TranSubroCommissions
                     decimal invoiceTotal = 0;
                     decimal clientDueTotal = 0;
 
-                    foreach (var claim in invoice.Claims)
+                    foreach (var check in invoice.Checks)
                     {
+                        var claim = invoice.Claims.FirstOrDefault(x => x.FileNumber == check.Memo);
                         decimal clientPercent = 0;
                         decimal dueClient = 0;
 
-                        if (claim.CheckAmount < 0)
+                        var filenumber = claim == null ? check.Memo : claim.FileNumber;
+                        if (check.Amount < 0)
                         {
                             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
                             culture.NumberFormat.CurrencyNegativePattern = 1;
 
-                            dueClient = claim.CheckAmount;
+                            dueClient = check.Amount;
                             invoiceLines.Add(new InvoiceLine()
                             {
                                 LineNumber = line.ToString(),
                                 FileNumber = "Disbursements",
-                                Description = claim.Description,
+                                Description = claim?.Description,
                                 CheckAmount = String.Format(culture, "{0:C}", dueClient),
                                 AmountDue = String.Format(culture, "{0:C}", dueClient),
                                 SplitRate = "",
@@ -391,15 +395,16 @@ namespace TranSubroCommissions
                         }
                         else
                         {
-                            clientPercent = GetClientPercentForCheck(claim.FileNumber, client.Value);
-                            dueClient = clientPercent * claim.CheckAmount;
+                          
+                            clientPercent = GetClientPercentForCheck(filenumber, client.Value);
+                            dueClient = clientPercent * check.Amount;
 
                             invoiceLines.Add(new InvoiceLine()
                             {
                                 LineNumber = line.ToString(),
-                                FileNumber = claim.FileNumber,
-                                Description = claim.Description,
-                                CheckAmount = claim.CheckAmount.ToString("c"),
+                                FileNumber = check.Memo,
+                                Description = claim?.Description,
+                                CheckAmount = check.Amount.ToString("c"),
                                 AmountDue = dueClient.ToString("c"),
                                 SplitRate = (clientPercent * 100).ToString("#.000"),
                                 CommissionRate = ""
@@ -408,16 +413,29 @@ namespace TranSubroCommissions
                         }
                          
                         clientDueTotal += dueClient;
-                        invoiceTotal += claim.CheckAmount;
+                        invoiceTotal += check.Amount;
                         line++;
                     }
                      
                     string items = invoice.Claims.Count > 1 ? "items" : "item";
 
-                    qb.AddClientInvoice(new Invoice() {
-                        ClientName = client.Key,
-                        Lines = new List<InvoiceLine>(invoiceLines)
-                    });
+
+                    UpdateStatus("Storing invoice as purchase order...");
+
+                    try
+                    {
+                        qb.AddClientInvoice(new Invoice()
+                        {
+                            ClientName = client.Key,
+                            Lines = new List<InvoiceLine>(invoiceLines)
+                        });
+
+                        UpdateStatus($"Invoice for {client.Key} Successfully saved.");
+                    }
+                    catch(Exception ex)
+                    {
+                        UpdateStatus($"Saving invoice for {client.Key} failed due to error: {ex.Message}");
+                    }
 
                     invoiceLines.Add(new InvoiceLine()
                     {
@@ -476,11 +494,7 @@ namespace TranSubroCommissions
                                 invoices.Children.Add(datagrid);
                                 datagrid.ItemsSource = invoiceLines;
                             });
-
-
-
-
-
+                             
                             var clientClaims = claimsByClient[commission.FullName];
 
                             foreach (var clientClaim in clientClaims)

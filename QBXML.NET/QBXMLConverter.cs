@@ -311,7 +311,7 @@ namespace QBXML.NET
                 {
                     FirstName = node["FirstName"]?.InnerText,
                     LastName = node["LastName"]?.InnerText,
-                    EditSequence = long.Parse(node["EditSequence"]?.InnerText),
+                    EditSequence = node["EditSequence"] != null ? long.Parse(node["EditSequence"].InnerText) : 0,
                     Name = node["Name"]?.InnerText,
                     IsActive = bool.Parse(node["IsActive"]?.InnerText),
                     PrintAs = node["PrintAs"]?.InnerText,
@@ -853,6 +853,12 @@ namespace QBXML.NET
 
                         if(lineNode["Memo"] == null)
                         {
+                            //probably just skipped a line
+                            if(lineNode["Amount"] == null && lineNode["AccountRef"] == null && lineNode["EntityRef"] == null)
+                            {
+                                continue;
+                            }    
+
                             if(lineNode["CheckNumber"] != null)
                                 throw new Exception("Error: deposit for check number " + lineNode["CheckNumber"]?.InnerText + " is missing a memo.");
                             else

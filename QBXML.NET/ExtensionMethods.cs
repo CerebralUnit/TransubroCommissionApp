@@ -16,6 +16,9 @@ namespace QBXML.NET
 
         public static string ToXmlString(this string str)
         {
+            if (str == null)
+                return String.Empty;
+
             return str
                     .Replace("&", "&amp;")
                     .Replace("<", "&lt;")
